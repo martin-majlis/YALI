@@ -1,21 +1,18 @@
 #!/bin/bash
 
-FILE_A=test_a
-FILE_B=test_b
-FILE_FL=test_fl
-DIR_MODEL=test_model
+source test-config.sh
 
-if [ ! -f $FILE_A ]; then
-	perl -e 'for $i (0 ... 1000) { print "a" x rand(10), " "; }; print "\n";' > $FILE_A;
+if [ ! -f $FILE_TRAIN_A ]; then
+	perl -e 'for $i (0 ... 1000) { print "a" x rand(10), " "; }; print "\n";' > $FILE_TRAIN_A;
 fi;
 
-if [ ! -f $FILE_B ]; then
-	perl -e 'for $i (0 ... 1000) { print "b" x rand(10), " "; }; print "\n";' > $FILE_B;
+if [ ! -f $FILE_TRAIN_B ]; then
+	perl -e 'for $i (0 ... 1000) { print "b" x rand(10), " "; }; print "\n";' > $FILE_TRAIN_B;
 fi;
 
-echo -e "aaa\t${FILE_A}\nbbb\t${FILE_B}\n" > $FILE_FL;
+echo -e "aaa\t${FILE_TRAIN_A}\nbbb\t${FILE_TRAIN_B}" > $FILE_TRAIN_FL;
 
-../build-model.pl --ngram=4 --fl=$FILE_FL --out=$DIR_MODEL;
+../build-model.pl --ngram=4 --fl=$FILE_TRAIN_FL --out=$DIR_MODEL;
 
 
 

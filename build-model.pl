@@ -71,13 +71,17 @@ open(my $fhList, "<", $fileList) or die $fileList . ": " . $!;
 
 while ( <$fhList> ) {
 	chomp;
-	print STDERR $_, "\n";
 	next if ! $_;
 	
 	my ($code, $file) = split(/\t/, $_);
 	push(@files, [$code, $file]);
 
 	print STDERR "\nReading file: $file\n";
+	
+	if ( ! -f $file ) {
+	    print STDERR "Skipping $_\n";
+	    next;
+	}
 
 	my $fh = my_open($file);
 
