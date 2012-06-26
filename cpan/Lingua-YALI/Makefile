@@ -5,9 +5,12 @@ doc:
 	podchecker Lingua-YALI-$$version/lib/Lingua/YALI/Builder.pm; \
 	podchecker Lingua-YALI-$$version/lib/Lingua/YALI/Identifier.pm; \
 	podchecker Lingua-YALI-$$version/lib/Lingua/YALI/LanguageIdentifier.pm; \
+	podchecker Lingua-YALI-$$version/lib/Lingua/YALI.pm; \
+	podchecker Lingua-YALI-$$version/lib/Lingua/YALI/Examples.pod; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/Builder.pm > doc_Builder.html; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/Identifier.pm > doc_Identifier.html; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/LanguageIdentifier.pm > doc_LanguageIdentifier.html; \
+	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/Examples.pod > doc_Examples.html; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI.pm > doc_YALI.html; \
 	
 test-full:

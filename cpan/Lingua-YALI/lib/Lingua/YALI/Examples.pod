@@ -1,0 +1,47 @@
+package Lingua::YALI::Examples;
+
+# ABSTRACT: Examples of usages.
+
+=head1 Language Identification
+
+    use Lingua::YALI::LanguageIdentifier;
+    
+    // create identifier and register languages
+    my $identifier = Lingua::YALI::LanguageIdentifier->new();
+    $identifier->add_language("ces", "eng")
+    
+    // identify string
+    my $result = $identifier->identify_string("CPAN, the Comprehensive Perl Archive Network, is an archive of modules written in Perl.");
+    print "The most probable language is " . $result->[0]->[0] . ".\n";
+    // prints out The most probable language is eng.    
+
+=head1 Training models
+
+    use Lingua::YALI::Builder;
+    use Lingua::YALI::Identifier;
+    
+    // create models
+    my $builder_a = Lingua::YALI::Builder->new(ngrams=>[2]);
+    $builder_a->train_string("aaaaa aaaa aaa aaa aaa aaaaa aa");
+    $builder_a->store("model_a.2_all.gz", 2);
+
+    my $builder_b = Lingua::YALI::Builder->new(ngrams=>[2]);
+    $builder_b->train_string("bbbbbb bbbb bbbb bbb bbbb bbbb bbb");
+    $builder_b->store("model_b.2_all.gz", 2);
+
+    // create identifier and load models
+    my $identifier = Lingua::YALI::Identifier->new();
+    $identifier->add_class("a", "model_a.2_all.gz");
+    $identifier->add_class("b", "model_b.2_all.gz");
+
+    // identify strings
+    my $result1 = $identifier->identify_string("aaaaaaaaaaaaaaaaaaa");
+    print $result1->[0]->[0] . "\t" . $result1->[0]->[1];
+    // prints out a 1
+    
+    my $result2 = $identifier->identify_string("bbbbbbbbbbbbbbbbbbb");
+    print $result2->[0]->[0] . "\t" . $result2->[0]->[1];
+    // prints out b 1
+
+=cut
+

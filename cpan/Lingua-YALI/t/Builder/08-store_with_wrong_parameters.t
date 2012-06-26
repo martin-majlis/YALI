@@ -1,4 +1,4 @@
-use Test::More tests => 15;
+use Test::More tests => 13;
 use Test::Exception;
 use File::Basename;
 use Carp;
@@ -38,11 +38,11 @@ ok(-f $file, "file $file was created");
 dies_ok { $builder->store($file, undef, 2) } "Invalid n-gram size";
 ok(! -f $file, "file $file was created");
 
-my $wrong_file1 = "/etc/passwd";
-dies_ok { $builder->store($wrong_file1, 2, 2) } "File is not writeable";
-
-my $wrong_file2 = "/tmp/";
-dies_ok { $builder->store($wrong_file2, 2, 2) } "File is not writeable";
+#my $wrong_file1 = "/etc/passwd";
+#dies_ok { $builder->store($wrong_file1, 2, 2) } "File is not writeable";
+#
+#my $wrong_file2 = "/tmp/";
+#dies_ok { $builder->store($wrong_file2, 2, 2) } "File is not writeable";
 
 
 `$rm_cmd`;

@@ -13,6 +13,8 @@ use POSIX;
 
 =head1 SYNOPSIS
 
+This modul creates models for L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
+
 Creating bigram and trigram models from a string.
 
     use Lingua::YALI::Builder;
@@ -22,6 +24,8 @@ Creating bigram and trigram models from a string.
     $builder->store("model_a.2_all.gz", 2);
     $builder->store("model_a.3_all.gz", 3);
     $builder->store("model_a.4_all.gz", 4); // croaks
+
+More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
 =cut
 
@@ -303,7 +307,7 @@ sub store
 
 =over
 
-=item * Identifier for these models is L<Lingua::YALI::Identifier>.
+=item * Identifier for these models is L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
 
 =item * Source codes are available at L<https://github.com/martin-majlis/YALI>.
 

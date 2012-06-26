@@ -1,7 +1,26 @@
 use strict;
 use warnings;
 package Lingua::YALI;
-# ABSTRACT: Returns information about languages.
+# ABSTRACT: YALI - Yet Another Language Identifier.
+
+=head1 SYNOPSIS
+
+The YALI package contains several modules:
+
+=over    
+
+=item * L<Lingua::YALI::Examples|Lingua::YALI::Examples> - contains examples.
+
+=item * L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> - is capable of recognizing 122 languages.
+
+=item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use own models for identification.
+
+=item * L<Lingua::YALI::Builder|Lingua::YALI::Builder> - allows to construct own models for identification.
+
+
+=back
+
+=cut
 
 sub _open
 {
