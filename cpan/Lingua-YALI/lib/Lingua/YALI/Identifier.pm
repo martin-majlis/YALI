@@ -47,7 +47,7 @@ sub add_class
     if ( defined( $self->{_model_file}->{$class} ) ) {
         return 0;
     }
-    
+
     if ( ! defined($file) ) {
         croak("Model has to be specified.");
     }
@@ -59,7 +59,7 @@ sub add_class
     $self->_load_model($class, $file);
 
     $self->{_model_file}->{$class} = $file;
-    
+
     return 1;
 }
 
@@ -103,8 +103,8 @@ sub get_classes
 
 =method identify_file($file)
 
-Identifies class of file $file. Returns reference to array of pairs with values [class, score] 
-sorted descendently according to score, so the first result is the most probable one. 
+Identifies class of file $file. Returns reference to array of pairs with values [class, score]
+sorted descendently according to score, so the first result is the most probable one.
 
 =head4 Returns [ ['lbl1', score1], ['lbl2', score2], ...]
 
@@ -114,13 +114,13 @@ sub identify_file
     my ( $self, $file ) = @_;
     my $fh = Lingua::YALI::_open($file);
 
-    return $self->identify_handler($fh);
+    return $self->identify_handle($fh);
 }
 
 =method identify_string($string)
 
-Identifies class of string $string. Returns reference to array of pairs with values [class, score] 
-sorted descendently according to score, so the first result is the most probable one. 
+Identifies class of string $string. Returns reference to array of pairs with values [class, score]
+sorted descendently according to score, so the first result is the most probable one.
 
 =head4 Returns [ ['lbl1', score1], ['lbl2', score2], ...]
 
@@ -130,29 +130,29 @@ sub identify_string
     my ( $self, $string ) = @_;
     open(my $fh, "<", \$string) or croak $!;
 
-    my $result = $self->identify_handler($fh);
+    my $result = $self->identify_handle($fh);
 
     close($fh);
 
     return $result;
 }
 
-=method identify_handler($fh)
+=method identify_handle($fh)
 
-Identifies class of file handler $fh. Returns reference to array of pairs with values [class, score] 
-sorted descendently according to score, so the first result is the most probable one. 
+Identifies class of file handler $fh. Returns reference to array of pairs with values [class, score]
+sorted descendently according to score, so the first result is the most probable one.
 
 =head4 Returns [ ['lbl1', score1], ['lbl2', score2], ...]
 
 =cut
-sub identify_handler
+sub identify_handle
 {
     my ($self, $fh, $verbose) = @_;
     my %actRes = ();
 
 #    my $padding = $self->{_padding};
     my $ngram = $self->{_ngram};
-    
+
     if ( ! defined($ngram) ) {
         croak("At least one class must be specified.");
     }
@@ -231,7 +231,7 @@ sub _load_model
     open(my $fh, "<:gzip:bytes", $file) or croak($!);
     my $ngram = <$fh>;
     my $total_line = <$fh>;
-    
+
     if ( ! defined($self->{_ngram}) ) {
         $self->{_ngram} = $ngram;
     } else {
@@ -256,7 +256,7 @@ sub _load_model
     }
 
     close($fh);
-    
+
     $self->{_models_loaded}->{$class} = 1;
 
     return;
@@ -271,7 +271,7 @@ sub _unload_model
     }
 
     delete($self->{_models_loaded}->{$class});
-    
+
     my $classes = $self->get_classes();
 #    print STDERR "\nX=removing $class\n" . (join("\t", @$classes)) . "\n" . (scalar @$classes) . "\nX\n";
     if ( scalar @$classes == 0 ) {
