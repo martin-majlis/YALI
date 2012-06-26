@@ -18,7 +18,7 @@ has '_language_model' => (is => 'rw', isa => 'HashRef');
 
 =head1 SYNOPSIS
 
-This modul is can identify 122 languages.
+This modul is for language identification and can identify 122 languages.
 
     use Lingua::YALI::LanguageIdentifier;
     
