@@ -70,4 +70,41 @@ sub _open
     binmode $hdl, ":bytes";
     return $hdl;
 }
+
+sub _identify_fh
+{
+    my ($identifier, $fh, $format, $languages) = @_;
+    my $result = $identifier->identify_handle($fh);
+    _print_result($result, $format);
+}
+
+sub identify
+{
+    my ($identifier, $file, $format, $languages) = @_;
+    my $result = $identifier->identify_file($file);
+    _print_result($result, $format);
+}
+
+
+sub _print_result
+{
+    my ($result, $format, $languages) = @_;
+    my $line = "";
+    if ( $format eq "single" ) {
+        if ( scalar @$result > 0 ) {
+            $line = $result->[0]->[0];
+        }
+    } elsif ( $format eq "all" ) {
+        $line = join("\t", map { $_->[0] } @{$result});
+    } elsif ( $format eq "all_p" ) {
+        $line = join("\t", map { $_->[0].":".$_->[1] } @{$result});
+    } elsif ( $format eq "tabbed" ) {
+        my %res = ();
+        map { $res{$_->[0]} = $_->[1] } @{$result};
+        $line = join("\t", map { my $prob = 0; if ( $res{$_} ) { $prob = $res{$_}; }; $prob; } @$languages);
+    }
+    
+    print $line . "\n";
+}
+
 1;

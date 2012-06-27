@@ -7,6 +7,8 @@ use strict;
 use warnings;
 
 use Lingua::YALI::LanguageIdentifier;
+use Lingua::YALI;
+
 use Getopt::Long;
 use Pod::Usage;
 
@@ -57,9 +59,9 @@ $identifier->add_language(@languages);
 
 if ( defined($input_file) ) {
     if ( $input_file eq "-" ) {
-        identify_fh(\*STDIN);
+        Lingua::YALI::_identify_fh($identifier, \*STDIN, $format, \@languages);
     } else {
-        identify($input_file);
+        Lingua::YALI::_identify($identifier, $input_file, $format, \@languages);
     }
 } elsif ( defined($file_list) ) {
     my $fh_list = undef;
@@ -70,46 +72,9 @@ if ( defined($input_file) ) {
     }
     while ( <$fh_list> ) {
         chomp;
-        identify($_);
+        Lingua::YALI::_identify($identifier, $_, $format, \@languages);
     }
 }
-
-sub identify_fh
-{
-    my $fh = shift;
-    my $result = $identifier->identify_handle($fh);
-    print_result($result);
-}
-
-sub identify
-{
-    my $file = shift;
-    my $result = $identifier->identify_file($result);
-    print_result($result);
-}
-
-
-sub print_result
-{
-    my $result = shift;
-    my $line = "";
-    if ( $format eq "single" ) {
-        if ( scalar @$result > 0 ) {
-            $line = $result->[0]->[0];
-        }
-    } elsif ( $format eq "all" ) {
-        $line = join("\t", map { $_->[0] } @{$result});
-    } elsif ( $format eq "all_p" ) {
-        $line = join("\t", map { $_->[0].":".$_->[1] } @{$result});
-    } elsif ( $format eq "tabbed" ) {
-        my %res = ();
-        map { $res{$_->[0]} = $_->[1] } @{$result};
-        $line = join("\t", map { my $prob = 0; if ( $res{$_} ) { $prob = $res{$_}; }; $prob; } @languages);
-    }
-    
-    print $line . "\n";
-}
-
 
 =head1 SYNOPSIS
 
@@ -137,8 +102,3 @@ EXAMPLES:
  cat /etc/passwd | yali-language-identifier -i=- -l="eng ces"
 
 =cut
-
-
-
-                     
-
