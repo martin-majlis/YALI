@@ -7,7 +7,7 @@ use Carp;
 use PerlIO::gzip;
 use Lingua::YALI;
 
-# ABSTRACT: Returns information about languages.
+# ABSTRACT: Module for language identification with custom models.
 
 has '_model_file' => ( is => 'rw', isa => 'HashRef' );
 has '_frequency' => ( is => 'rw', isa => 'HashRef' );

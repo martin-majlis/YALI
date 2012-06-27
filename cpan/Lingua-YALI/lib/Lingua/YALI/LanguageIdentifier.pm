@@ -1,5 +1,5 @@
 package Lingua::YALI::LanguageIdentifier;
-# ABSTRACT: Returns information about languages.
+# ABSTRACT: Module for language identification.
 
 =encoding utf8
 =cut
