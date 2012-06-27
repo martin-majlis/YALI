@@ -15,7 +15,7 @@ The YALI package contains several modules:
 
 =item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use own models for identification.
 
-=item * It is based on published L<algorithm|http://ufal.mff.cuni.cz/~majlis/yali/>.
+=item * It is based on published L<http://ufal.mff.cuni.cz/~majlis/yali/>.
 
 =back
 
@@ -28,8 +28,6 @@ The YALI package contains several modules:
 =item * Contains pretrained models for identifying 122 languages.
 
 =item * Allows to create own models, trained on texts from specific domain, which outperforms the pretrained ones.
-
-=item * 
 
 =back
 
