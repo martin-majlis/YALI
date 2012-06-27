@@ -1,0 +1,142 @@
+#!/usr/bin/env perl
+# ABSTRACT: Script for language identification
+
+use strict;
+use warnings;
+
+use Lingua::YALI::LanguageIdentifier;
+use Getopt::Long;
+use Pod::Usage;
+
+my $file_list = undef;
+my $input_file = undef;
+my $format = "single";
+my $languages = 0;
+my $help = 0;
+my $supported = 0;
+
+my $result = GetOptions("filelist=s" => \$file_list,
+                     "input|i=s"   => \$input_file,      # string
+                     "languages|l=s" => \$languages,
+                     "format|f=s"  => \$format,
+                     "supported|s"  => \$supported,
+                     "help|h"  => \$help
+) || pod2usage(2);
+
+if ($help) {
+    pod2usage();
+}
+
+if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne "tabbed" ) {
+    pod2usage("Unsupported format $format.");
+}
+
+# it is incorrect when parameter filelist and input are specified
+if ( defined($input_file) && defined($file_list) ) {
+    pod2usage("Options --filelist and --input can not be specified in the same time.");
+}
+
+# it is also incorrect when none of parameter filelist and input is specified
+if ( ! defined($input_file) && ! defined($file_list) ) {
+    pod2usage("At least one of options --filelist and --input must be specified.");
+}
+
+my $identifier = Lingua::YALI::LanguageIdentifier->new();
+
+# print out supported files and terminate
+if ( $supported ) {
+    print join("\n", @{$identifier->get_available_languages()}), "\n";
+    exit;
+}
+
+# register required languages
+my @languages = split(/ /, $languages);
+$identifier->add_language(@languages);
+
+if ( defined($input_file) ) {
+    if ( $input_file eq "-" ) {
+        identify_fh(\*STDIN);
+    } else {
+        identify($input_file);
+    }
+} elsif ( defined($file_list) ) {
+    my $fh_list = undef;
+    if ( $file_list eq "-" ) {
+        $fh_list = \*STDIN;
+    } else {
+        open($fh_list, "<", $file_list) or croak $!;
+    }
+    while ( <$fh_list> ) {
+        chomp;
+        identify($_);
+    }
+}
+
+sub identify_fh
+{
+    my $fh = shift;
+    my $result = $identifier->identify_handle($fh);
+    print_result($result);
+}
+
+sub identify
+{
+    my $file = shift;
+    my $result = $identifier->identify_file($result);
+    print_result($result);
+}
+
+
+sub print_result
+{
+    my $result = shift;
+    my $line = "";
+    if ( $format eq "single" ) {
+        if ( scalar @$result > 0 ) {
+            $line = $result->[0]->[0];
+        }
+    } elsif ( $format eq "all" ) {
+        $line = join("\t", map { $_->[0] } @{$result});
+    } elsif ( $format eq "all_p" ) {
+        $line = join("\t", map { $_->[0].":".$_->[1] } @{$result});
+    } elsif ( $format eq "tabbed" ) {
+        my %res = ();
+        map { $res{$_->[0]} = $_->[1] } @{$result};
+        $line = join("\t", map { my $prob = 0; if ( $res{$_} ) { $prob = $res{$_}; }; $prob; } @languages);
+    }
+    
+    print $line . "\n";
+}
+
+
+=head1 SYNOPSIS
+
+yali-language-identifier [options]
+
+Options:
+
+ -i, --input=F         input file. When F is -, read standard input. 
+     --filelist=F      input files are read from F. When F is -, read them from standard input.
+ -f, --format=FORMAT   output FORMAT
+ -l, --languages=L     ISO 639-3 codes of languages seperated by space
+ -s, --supported       prints list of supported languages
+ -h, --help            prints documentation
+
+FORMAT:
+
+ single   - prints out only the most probable language
+ all      - prints out all languages sorted according to their probability descendetly
+ all_p    - prints out all languages with probability sorted according to their probability descendetly
+ tabbed   - prints out probabilities of languages separated by tab in order used for --languages
+
+EXAMPLES:
+
+ Is file /etc/passwd written in english or czech?
+ cat /etc/passwd | yali-language-identifier -i=- -l="eng ces"
+
+=cut
+
+
+
+                     
+
