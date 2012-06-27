@@ -8,3 +8,71 @@ use warnings;
 use Lingua::YALI::Builder;
 
 
+use strict;
+use warnings;
+
+use Lingua::YALI::Identifier;
+use Lingua::YALI;
+
+use Getopt::Long;
+use Pod::Usage;
+use Carp;
+use File::Basename;
+
+my $output_file = undef;
+my $input_file = undef;
+my $count = undef;
+my $ngram = 4;
+my $help = 0;
+
+my $result = GetOptions("input|i=s"   => \$input_file,
+                     "output|o=s"   => \$output_file,
+                     "count|c=i" => \$count,
+                     "ngram|n=i"  => \$ngram,
+                     "help|h"  => \$help
+) || pod2usage(2);
+
+if ($help) {
+    pod2usage();
+}
+
+if ( ! defined($input_file) ) {
+    $input_file = "-";
+}
+
+if ( ! defined($output_file) ) {
+    pod2usage("Output file --output has to be specified.");
+}
+
+if ( defined($count) && $count < 1 ) {
+    pod2usage("The number of n-grams --count has to be positive. $count was used.");
+}
+
+if ( $ngram < 1 ) {
+    pod2usage("The n-gram size --ngram has to be positive. $ngram was used.");
+}
+
+my $builder = Lingua::YALI::Builder->new(ngrams=>[$ngram]);
+if ( defined($input_file) ) {
+    if ( $input_file eq "-" ) {
+        $builder->train_handle(\*STDIN);
+    } else {
+        $builder->train_file($input_file);
+    }
+}
+
+$builder->store($output_file, $ngram, $count);
+
+=head1 SYNOPSIS
+
+yali-builder [options]
+
+Options:
+
+ -i, --input=F         input file. When F is -, read standard input (default -).
+ -o, --output=F        output file  
+ -n, --ngram=N         n-gram size (default 4)
+ -c, --count           the number of n-grams
+ -h, --help            prints documentation
+
+=cut
