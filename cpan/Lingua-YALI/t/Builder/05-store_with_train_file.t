@@ -1,9 +1,10 @@
+use strict;
+use warnings;
+
 use Test::More tests => 22;
 use Test::Exception;
 use File::Basename;
 use Carp;
-use strict;
-use warnings;
 
 my $rm_cmd ="rm -f " . dirname(__FILE__) . "/tmp.*";
 `$rm_cmd`;

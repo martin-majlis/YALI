@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 use Test::More tests => 12;
 use Time::HiRes;
 use Test::Command;

@@ -1,10 +1,10 @@
+use strict;
+use warnings;
+
 use Test::More tests => 6;
 use Test::Exception;
 use File::Basename;
 use Carp;
-use strict;
-use warnings;
-
 
 use Lingua::YALI::LanguageIdentifier;
 

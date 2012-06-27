@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 use Test::More tests => 24;
 use Time::HiRes;
 use Test::Command;
@@ -51,7 +54,7 @@ ok(-f $tmp_file);
 
 
 $cmd_pref = "";
-$smd_suffix =~ s/-i=-//;
+$cmd_suffix =~ s/-i=-//;
 $cmd_suffix .= " -i=$input_file";
 
 exit_is_num($cmd_pref . $cmd_base . " --ngram=2 --count=20" . $cmd_suffix, 0);

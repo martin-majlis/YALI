@@ -1,9 +1,10 @@
+use strict;
+use warnings;
+
 use Test::More tests => 7;
 use Test::Exception;
 use File::Basename;
 use Carp;
-use strict;
-use warnings;
 
 
 BEGIN { use_ok('Lingua::YALI::Identifier') };
