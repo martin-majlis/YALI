@@ -1,0 +1,21 @@
+0.007 2006-06-27
+ - Added script yali-identifier for language identification with custom models.
+ 
+0.006 2006-06-27
+ - Added script yali-language-identifier for language identification with pretrained models.
+
+0.005 2006-06-26
+ - Comparison with other tools for language identification was added.
+
+0.004 2006-06-26
+ - Documentation was extended.
+ - Examples were added.
+
+0.003 2006-06-25
+ - Builder was implemented.
+
+0.002 2012-06-25
+ - Identifier was implemented.
+
+0.001 2012-06-25
+ - LanguageIdentifier was implemented.

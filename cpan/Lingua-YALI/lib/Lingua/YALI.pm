@@ -78,7 +78,7 @@ sub _identify_fh
     _print_result($result, $format);
 }
 
-sub identify
+sub _identify
 {
     my ($identifier, $file, $format, $languages) = @_;
     my $result = $identifier->identify_file($file);
