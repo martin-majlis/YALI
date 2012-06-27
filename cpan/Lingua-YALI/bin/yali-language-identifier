@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
+
 # ABSTRACT: Script for language identification
+# PODNAME: yali-language-identifier
 
 use strict;
 use warnings;

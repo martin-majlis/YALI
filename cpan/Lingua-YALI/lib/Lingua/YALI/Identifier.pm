@@ -167,7 +167,7 @@ sub identify_file
     my ( $self, $file ) = @_;
     
     if ( ! defined($file) ) {
-        return undef;
+        return;
     }
     
     my $fh = Lingua::YALI::_open($file);
