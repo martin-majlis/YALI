@@ -1,3 +1,6 @@
+0.006 (27th June 2012)
+- Added script yali-language-identifier for language identification with pretrained models.
+
 0.005 (26th June 2012)
 - Comparison with other tools for language identification was added.
 
