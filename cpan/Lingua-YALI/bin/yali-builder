@@ -30,10 +30,10 @@ my $result = GetOptions("input|i=s"   => \$input_file,
                      "count|c=i" => \$count,
                      "ngram|n=i"  => \$ngram,
                      "help|h"  => \$help
-) || pod2usage(2);
+) || pod2usage(5);
 
 if ($help) {
-    pod2usage();
+    pod2usage(-exitval => 0);
 }
 
 if ( ! defined($input_file) ) {

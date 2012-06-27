@@ -28,7 +28,7 @@ my $result = GetOptions("filelist=s" => \$file_list,
 ) || pod2usage(2);
 
 if ($help) {
-    pod2usage();
+    pod2usage(-exitval => 0);
 }
 
 if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne "tabbed" ) {
