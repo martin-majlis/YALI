@@ -25,7 +25,7 @@ my $result = GetOptions("filelist=s" => \$file_list,
                      "classes|c=s" => \$classes_file,
                      "format|f=s"  => \$format,
                      "help|h"  => \$help
-) || pod2usage(2);
+) || pod2usage(5);
 
 if ($help) {
     pod2usage(-exitval => 0);
