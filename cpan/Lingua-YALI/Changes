@@ -1,3 +1,7 @@
+0.008 2006-06-27
+ - Added script yali-builder for building custom language models.
+ - Changelog was renamed to Changes
+ 
 0.007 2006-06-27
  - Added script yali-identifier for language identification with custom models.
  
