@@ -2,7 +2,6 @@
 
 # ABSTRACT: Script for language identification
 # PODNAME: yali-language-identifier
-# VERSION
 
 use strict;
 use warnings;
@@ -12,6 +11,9 @@ use Lingua::YALI;
 
 use Getopt::Long;
 use Pod::Usage;
+use File::Basename;
+
+# VERSION
 
 my $file_list = undef;
 my $input_file = undef;
@@ -26,7 +28,7 @@ my $result = GetOptions("filelist=s" => \$file_list,
                      "format|f=s"  => \$format,
                      "supported|s"  => \$supported,
                      "help|h"  => \$help
-) || pod2usage(5);
+) || pod2usage(-exitval => 105);
 
 if ($help) {
     pod2usage(-exitval => 0);
@@ -41,7 +43,7 @@ if ( $supported ) {
 }
 
 if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne "tabbed" ) {
-    pod2usage("Unsupported format $format.");
+    pod2usage(-exitval => 101, -msg => "Unsupported format $format.");
 }
 
 # 
@@ -51,11 +53,11 @@ if ( ! defined($input_file) && ! defined($file_list) ) {
 
 # it is incorrect when parameter filelist and input are specified
 if ( defined($input_file) && defined($file_list) ) {
-    pod2usage("Options --filelist and --input can not be specified in the same time.");
+    pod2usage(-exitval => 101, -msg => "Options --filelist and --input can not be specified in the same time.");
 }
 
 if ( ! defined($languages) ) {
-    pod2usage("Options --languages has to be specified.");
+    pod2usage(-exitval => 101, -msg => "Options --languages has to be specified.");
 }
 
 # register required languages
@@ -70,14 +72,20 @@ if ( defined($input_file) ) {
     }
 } elsif ( defined($file_list) ) {
     my $fh_list = undef;
+    my $list_dir = "";
+    
     if ( $file_list eq "-" ) {
         $fh_list = \*STDIN;
     } else {
-        open($fh_list, "<", $file_list) or croak $!;
+        open($fh_list, "<", $file_list) or croak("Not found: $file_list\n" . $!);
+        $list_dir = dirname($file_list) . "/";        
     }
-    while ( <$fh_list> ) {
-        chomp;
-        Lingua::YALI::_identify($identifier, $_, $format, \@languages);
+    while ( my $file = <$fh_list> ) {
+        chomp $file;
+        if ( ! -f $file ) {
+            $file = $list_dir . $file;
+        }
+        Lingua::YALI::_identify($identifier, $file, $format, \@languages);
     }
 }
 

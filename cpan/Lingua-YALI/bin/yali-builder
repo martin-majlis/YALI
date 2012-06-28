@@ -2,7 +2,6 @@
 
 # ABSTRACT: Script for building language models
 # PODNAME: yali-builder
-# VERSION
 
 use strict;
 use warnings;
@@ -21,6 +20,8 @@ use Pod::Usage;
 use Carp;
 use File::Basename;
 
+# VERSION
+
 my $output_file = undef;
 my $file_list = undef;
 my $input_file = undef;
@@ -34,7 +35,7 @@ my $result = GetOptions("filelist=s" => \$file_list,
                      "count|c=i" => \$count,
                      "ngram|n=i"  => \$ngram,
                      "help|h"  => \$help
-) || pod2usage(5);
+) || pod2usage( -exitval => 105);
 
 if ($help) {
     pod2usage(-exitval => 0);
@@ -47,19 +48,19 @@ if ( ! defined($input_file) && ! defined($file_list) ) {
 
 # it is incorrect when parameter filelist and input are specified
 if ( defined($input_file) && defined($file_list) ) {
-    pod2usage("Options --filelist and --input can not be specified in the same time.");
+    pod2usage(-exitval => 101, -msg     => "Options --filelist and --input can not be specified in the same time.");
 }
 
 if ( ! defined($output_file) ) {
-    pod2usage("Output file --output has to be specified.");
+    pod2usage(-exitval => 101, -msg     => "Output file --output has to be specified.");
 }
 
 if ( defined($count) && $count < 1 ) {
-    pod2usage("The number of n-grams --count has to be positive. $count was used.");
+    pod2usage(-exitval => 101, -msg     => "The number of n-grams --count has to be positive. $count was used.");
 }
 
 if ( $ngram < 1 ) {
-    pod2usage("The n-gram size --ngram has to be positive. $ngram was used.");
+    pod2usage(-exitval => 101, -msg     => "The n-gram size --ngram has to be positive. $ngram was used.");
 }
 
 my $builder = Lingua::YALI::Builder->new(ngrams=>[$ngram]);

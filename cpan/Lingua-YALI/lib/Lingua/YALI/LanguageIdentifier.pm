@@ -1,5 +1,4 @@
 package Lingua::YALI::LanguageIdentifier;
-# VERSION
 # ABSTRACT: Module for language identification.
 
 =encoding utf8
@@ -10,6 +9,8 @@ use File::ShareDir;
 use File::Glob;
 use Carp;
 use Moose;
+
+# VERSION
 
 extends 'Lingua::YALI::Identifier';
 

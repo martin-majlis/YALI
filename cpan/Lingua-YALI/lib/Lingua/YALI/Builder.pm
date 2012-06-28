@@ -1,6 +1,5 @@
 package Lingua::YALI::Builder;
 # ABSTRACT: Constructs model for document identification.
-# VERSION
 
 use strict;
 use warnings;
@@ -11,6 +10,7 @@ use Moose::Util::TypeConstraints;
 use List::MoreUtils qw(uniq);
 use POSIX;
 
+# VERSION
 
 =head1 SYNOPSIS
 

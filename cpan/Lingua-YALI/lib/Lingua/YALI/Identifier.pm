@@ -1,6 +1,5 @@
 package Lingua::YALI::Identifier;
 # ABSTRACT: Module for language identification with custom models.
-# VERSION
 
 use strict;
 use warnings;
@@ -9,6 +8,7 @@ use Carp;
 use PerlIO::gzip;
 use Lingua::YALI;
 
+# VERSION
 
 has '_model_file' => ( is => 'rw', isa => 'HashRef' );
 has '_frequency' => ( is => 'rw', isa => 'HashRef' );

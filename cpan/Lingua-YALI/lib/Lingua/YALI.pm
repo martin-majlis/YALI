@@ -1,10 +1,11 @@
 package Lingua::YALI;
 # ABSTRACT: YALI - Yet Another Language Identifier.
-# VERSION
 
 use strict;
 use warnings;
 use Carp;
+
+# VERSION
 
 =head1 SYNOPSIS
 

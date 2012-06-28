@@ -2,7 +2,6 @@
 
 # ABSTRACT: Script for language identification with custom models
 # PODNAME: yali-identifier
-# VERSION
 
 use strict;
 use warnings;
@@ -15,6 +14,8 @@ use Pod::Usage;
 use Carp;
 use File::Basename;
 
+# VERSION
+
 my $file_list = undef;
 my $input_file = undef;
 my $format = "single";
@@ -26,14 +27,14 @@ my $result = GetOptions("filelist=s" => \$file_list,
                      "classes|c=s" => \$classes_file,
                      "format|f=s"  => \$format,
                      "help|h"  => \$help
-) || pod2usage(5);
+) || pod2usage(-exitval => 105);
 
 if ($help) {
     pod2usage(-exitval => 0);
 }
 
 if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne "tabbed" ) {
-    pod2usage("Unsupported format $format.");
+    pod2usage(-exitval => 101, -msg => "Unsupported format $format.");
 }
 
 # 
@@ -43,18 +44,18 @@ if ( ! defined($input_file) && ! defined($file_list) ) {
 
 # it is incorrect when parameter filelist and input are specified
 if ( defined($input_file) && defined($file_list) ) {
-    pod2usage("Options --filelist and --input can not be specified in the same time.");
+    pod2usage(-exitval => 101, -msg => "Options --filelist and --input can not be specified in the same time.");
 }
 
 if ( ! defined($classes_file) ) {
-    pod2usage("File with classes has to be specified.");
+    pod2usage(-exitval => 101, -msg => "File with classes has to be specified.");
 }
 
 my $identifier = Lingua::YALI::Identifier->new();
 
 # register classes
 my @classes = ();
-open(my $fh_classes, "<", $classes_file) or pod2usage("File with classes $classes_file can not be opened.");
+open(my $fh_classes, "<", $classes_file) or croak("Not found: $classes_file; " . $!);
 my $class_dir = dirname($classes_file);
 while ( <$fh_classes> ) {
     chomp;
@@ -89,14 +90,20 @@ if ( defined($input_file) ) {
     }
 } elsif ( defined($file_list) ) {
     my $fh_list = undef;
+    my $list_dir = "";
+
     if ( $file_list eq "-" ) {
         $fh_list = \*STDIN;
     } else {
-        open($fh_list, "<", $file_list) or croak $!;
+        open($fh_list, "<", $file_list) or croak("Not found: $file_list\n" . $!);
+        $list_dir = dirname($file_list) . "/";        
     }
-    while ( <$fh_list> ) {
-        chomp;
-        Lingua::YALI::_identify($identifier, $_, $format, \@classes);
+    while ( my $file = <$fh_list> ) {
+        chomp $file;
+        if ( ! -f $file ) {
+            $file = $list_dir . $file;
+        }
+        Lingua::YALI::_identify($identifier, $file, $format, \@classes);
     }
 }
 
