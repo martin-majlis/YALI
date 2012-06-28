@@ -1,4 +1,7 @@
 0.009 2006-06-28
+ - Tests for scripts were added.
+ 
+0.009 2006-06-28
  - Tests were extended.
  - Examples were extended.
  - Option --filelist was added to the yali-builder.
