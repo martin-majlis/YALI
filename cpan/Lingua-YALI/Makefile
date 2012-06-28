@@ -9,6 +9,7 @@ doc:
 	podchecker Lingua-YALI-$$version/lib/Lingua/YALI/Examples.pod; \
 	podchecker Lingua-YALI-$$version/bin/yali-language-identifier; \
 	podchecker Lingua-YALI-$$version/bin/yali-identifier; \
+	podchecker Lingua-YALI-$$version/bin/yali-builder; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/Builder.pm > doc_Builder.html; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/Identifier.pm > doc_Identifier.html; \
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI/LanguageIdentifier.pm > doc_LanguageIdentifier.html; \
@@ -16,6 +17,7 @@ doc:
 	pod2html --infile=Lingua-YALI-$$version/lib/Lingua/YALI.pm > doc_YALI.html; \
 	pod2html --infile=Lingua-YALI-$$version/bin/yali-language-identifier > doc_yali-language-identifier.html; \
 	pod2html --infile=Lingua-YALI-$$version/bin/yali-identifier > doc_yali-identifier.html; \
+	pod2html --infile=Lingua-YALI-$$version/bin/yali-builder > doc_yali-builder.html; \
 	
 test-full:
 	dzil test

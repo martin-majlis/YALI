@@ -1,3 +1,8 @@
+0.009 2006-06-28
+ - Tests were extended.
+ - Examples were extended.
+ - Option --filelist was added to the yali-builder.
+ 
 0.008 2006-06-27
  - Added script yali-builder for building custom language models.
  - Changelog was renamed to Changes
