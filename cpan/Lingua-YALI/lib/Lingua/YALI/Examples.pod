@@ -2,7 +2,104 @@ package Lingua::YALI::Examples;
 
 # ABSTRACT: Examples of usages.
 
-=head1 Language Identification
+=head1 Introduction
+
+=head2 Preparation
+
+Download training and test data
+
+    # download data
+    for i in `seq 1 20`; do
+        id=`printf "%02d" $i`;
+        echo "Processing document $id";
+        lynx --dump 'http://en.wikipedia.org/wiki/Special:Random' -noprint --nolist --nonumbers --nomargins -width=10000 > eng.$id.txt;
+        lynx --dump 'http://cs.wikipedia.org/wiki/Special:Random' -noprint --nolist --nonumbers --nomargins -width=10000 > ces.$id.txt;
+        lynx --dump 'http://fr.wikipedia.org/wiki/Special:Random' -noprint --nolist --nonumbers --nomargins -width=10000 > fra.$id.txt;
+    done;
+
+    # prepare training data
+    ls ces.* | head -n15 > list.ces.train;
+    ls eng.* | head -n15 > list.eng.train;
+    ls fra.* | head -n15 > list.fra.train;
+    
+    # prepare testing data
+    ls ces.* | tail -n5 > list.ces.test;
+    ls eng.* | tail -n5 > list.eng.test;
+    ls fra.* | tail -n5 > list.fra.test;
+
+=head1 Scripts
+
+This section provides information how to use scripts L<yali-builder|Lingua::yali-builder>, L<yali-identifier|Lingua::yali-identifier>, and  L<yali-language-identifier|Lingua::yali-language-identifier>.
+
+=head2 Language Identification  with Pretrained Models
+
+    # language identification for czech files
+    yali-language-identifier -l="eng ces fra" -filelist=list.ces.test
+    
+    # language identification for english files with different output format
+    yali-language-identifier -l="eng ces fra" -filelist=list.eng.test -f=all_p
+    
+    # language identification for french files read from STDIN
+    cat list.fra.test | yali-language-identifier -l="eng ces fra" -filelist=- -f=tabbed
+    
+    # single file
+    yali-language-identifier -l="eng ces fra" -i=ces.20.txt -f=all
+    
+    # single file read from STDIN
+    cat eng.20.txt | yali-identifier -l="eng ces fra" -i=- -f=all_p
+
+    # single file read from STDIN
+    cat fra.20.txt | yali-identifier -l="eng ces fra" -f=all_p
+
+=head2 Building Own Models
+
+    # czech bigram model with only 5 most frequent bigrams stored    
+    yali-builder --filelist=list.ces.train -n=2 -c=5 -o model.2.5.ces.gz
+    
+    # english bigram model with only 5 most frequent bigrams stored    
+    cat list.eng.train | yali-builder --filelist=- -n=2 -c=5 -o model.2.5.eng.gz
+    
+    # french bigram model with only 5 most frequent bigrams stored
+    cat list.eng.train | xargs cat | yali-builder -i=- -n=2 -c=5 -o model.2.5.fra.gz
+    
+    # create list with models
+    echo -e "ces\tmodel.2.5.ces.gz" > list.models.2
+    echo -e "eng\tmodel.2.5.eng.gz" >> list.models.2
+    echo -e "fra\tmodel.2.5.fra.gz" >> list.models.2
+
+=head2 Language Identification  with Own Models
+
+Only two changes are required to commands presented in section L<Language Identification  with Pretrained Models>.
+
+=over
+
+=item * Change I<yali-language-identifier> to I<yali-identifier>.
+
+=item * Change I<-l="eng ces fra"> to I<-c=list.models.2>.
+
+=back
+
+    # language identification for czech files
+    yali-identifier -c=list.models.2 -filelist=list.ces.test
+    
+    # language identification for english files with different output format
+    yali-identifier -c=list.models.2 -filelist=list.eng.test -f=all_p
+    
+    # language identification for french files read from STDIN
+    cat list.fra.test | yali-identifier -c=list.models.2 -filelist=- -f=tabbed
+    
+    # single file
+    yali-identifier -c=list.models.2 -i=ces.20.txt -f=all
+    
+    # single file read from STDIN
+    cat eng.20.txt | yali-identifier -c=list.models.2 -i=- -f=all_p
+
+    # single file read from STDIN
+    cat fra.20.txt | yali-identifier -c=list.models.2 -f=all_p
+    
+=head1 Modules
+
+=head2 Language Identification
 
     use Lingua::YALI::LanguageIdentifier;
     
@@ -15,7 +112,7 @@ package Lingua::YALI::Examples;
     print "The most probable language is " . $result->[0]->[0] . ".\n";
     // prints out The most probable language is eng.    
 
-=head1 Training models
+=head2 Training models
 
     use Lingua::YALI::Builder;
     use Lingua::YALI::Identifier;

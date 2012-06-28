@@ -35,14 +35,14 @@ if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne
     pod2usage("Unsupported format $format.");
 }
 
+# 
+if ( ! defined($input_file) && ! defined($file_list) ) {
+    $input_file = "-";
+}
+
 # it is incorrect when parameter filelist and input are specified
 if ( defined($input_file) && defined($file_list) ) {
     pod2usage("Options --filelist and --input can not be specified in the same time.");
-}
-
-# it is also incorrect when none of parameter filelist and input is specified
-if ( ! defined($input_file) && ! defined($file_list) ) {
-    pod2usage("At least one of options --filelist and --input must be specified.");
 }
 
 if ( ! defined($classes_file) ) {
@@ -118,5 +118,6 @@ FORMAT:
  all_p    - prints out all classes with probability sorted according to their probability descendetly
  tabbed   - prints out probabilities of classes separated by tab in order used in --classes
 
+More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples> 
 =cut
 

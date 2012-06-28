@@ -1,6 +1,9 @@
 use strict;
 use warnings;
 package Lingua::YALI;
+
+use Carp;
+
 # ABSTRACT: YALI - Yet Another Language Identifier.
 
 =head1 SYNOPSIS
@@ -75,14 +78,14 @@ sub _identify_fh
 {
     my ($identifier, $fh, $format, $languages) = @_;
     my $result = $identifier->identify_handle($fh);
-    _print_result($result, $format);
+    _print_result($result, $format, $languages);
 }
 
 sub _identify
 {
     my ($identifier, $file, $format, $languages) = @_;
     my $result = $identifier->identify_file($file);
-    _print_result($result, $format);
+    _print_result($result, $format, $languages);
 }
 
 
@@ -101,7 +104,7 @@ sub _print_result
     } elsif ( $format eq "tabbed" ) {
         my %res = ();
         map { $res{$_->[0]} = $_->[1] } @{$result};
-        $line = join("\t", map { my $prob = 0; if ( $res{$_} ) { $prob = $res{$_}; }; $prob; } @$languages);
+        $line = join("\t", map { $res{$_} } @$languages);
     }
     
     print $line . "\n";

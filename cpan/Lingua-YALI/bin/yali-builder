@@ -20,12 +20,14 @@ use Carp;
 use File::Basename;
 
 my $output_file = undef;
+my $file_list = undef;
 my $input_file = undef;
 my $count = undef;
 my $ngram = 4;
 my $help = 0;
 
-my $result = GetOptions("input|i=s"   => \$input_file,
+my $result = GetOptions("filelist=s" => \$file_list,
+                     "input|i=s"   => \$input_file,
                      "output|o=s"   => \$output_file,
                      "count|c=i" => \$count,
                      "ngram|n=i"  => \$ngram,
@@ -36,8 +38,14 @@ if ($help) {
     pod2usage(-exitval => 0);
 }
 
-if ( ! defined($input_file) ) {
+# 
+if ( ! defined($input_file) && ! defined($file_list) ) {
     $input_file = "-";
+}
+
+# it is incorrect when parameter filelist and input are specified
+if ( defined($input_file) && defined($file_list) ) {
+    pod2usage("Options --filelist and --input can not be specified in the same time.");
 }
 
 if ( ! defined($output_file) ) {
@@ -59,6 +67,17 @@ if ( defined($input_file) ) {
     } else {
         $builder->train_file($input_file);
     }
+} elsif ( defined($file_list) ) {
+    my $fh_list = undef;
+    if ( $file_list eq "-" ) {
+        $fh_list = \*STDIN;
+    } else {
+        open($fh_list, "<", $file_list) or croak $!;
+    }
+    while ( <$fh_list> ) {
+        chomp;
+        $builder->train_file($_);
+    }
 }
 
 $builder->store($output_file, $ngram, $count);
@@ -70,9 +89,12 @@ yali-builder [options]
 Options:
 
  -i, --input=F         input file. When F is -, read standard input (default -).
+     --filelist=F      input files are read from F. When F is -, read them from standard input. 
  -o, --output=F        output file  
  -n, --ngram=N         n-gram size (default 4)
  -c, --count           the number of n-grams
  -h, --help            prints documentation
+
+More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples> 
 
 =cut
