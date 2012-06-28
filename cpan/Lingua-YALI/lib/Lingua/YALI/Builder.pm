@@ -1,5 +1,6 @@
 package Lingua::YALI::Builder;
 # ABSTRACT: Constructs model for document identification.
+# VERSION
 
 use strict;
 use warnings;

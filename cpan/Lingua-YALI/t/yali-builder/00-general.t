@@ -13,3 +13,5 @@ ok(-x $cmd_base);
 exit_is_num($cmd_base . " --unknownoption", 5);
 exit_is_num($cmd_base, 2);
 
+
+

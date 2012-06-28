@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
+
 # ABSTRACT: Script for building language models
 # PODNAME: yali-builder
+# VERSION
 
 use strict;
 use warnings;

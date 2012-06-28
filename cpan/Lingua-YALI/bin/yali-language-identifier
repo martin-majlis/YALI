@@ -2,6 +2,7 @@
 
 # ABSTRACT: Script for language identification
 # PODNAME: yali-language-identifier
+# VERSION
 
 use strict;
 use warnings;

@@ -1,4 +1,5 @@
 package Lingua::YALI::LanguageIdentifier;
+# VERSION
 # ABSTRACT: Module for language identification.
 
 =encoding utf8

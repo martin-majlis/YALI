@@ -1,6 +1,6 @@
 package Lingua::YALI::Examples;
-
 # ABSTRACT: Examples of usages.
+# VERSION
 
 =head1 Introduction
 

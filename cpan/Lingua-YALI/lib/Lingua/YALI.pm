@@ -1,10 +1,10 @@
+package Lingua::YALI;
+# ABSTRACT: YALI - Yet Another Language Identifier.
+# VERSION
+
 use strict;
 use warnings;
-package Lingua::YALI;
-
 use Carp;
-
-# ABSTRACT: YALI - Yet Another Language Identifier.
 
 =head1 SYNOPSIS
 

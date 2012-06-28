@@ -2,6 +2,7 @@
 
 # ABSTRACT: Script for language identification with custom models
 # PODNAME: yali-identifier
+# VERSION
 
 use strict;
 use warnings;
