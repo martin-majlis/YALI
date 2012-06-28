@@ -13,15 +13,15 @@ my $cmd_pref = "echo 'aaaaaaaa' | ";
 my $cmd_base = dirname(__FILE__) . "/../../bin/yali-builder";
 my $cmd_suffix = " -o=$tmp_file";
 
-exit_is_num($cmd_pref . $cmd_base . " --count=0" . $cmd_suffix, 2);
-exit_is_num($cmd_pref . $cmd_base . " --count=-10" . $cmd_suffix, 2);
-exit_is_num($cmd_pref . $cmd_base . " --count" . $cmd_suffix, 5);
-exit_is_num($cmd_pref . $cmd_base . " --count=adads" . $cmd_suffix, 5);
+exit_is_num($cmd_pref . $cmd_base . " --count=0" . $cmd_suffix, 101);
+exit_is_num($cmd_pref . $cmd_base . " --count=-10" . $cmd_suffix, 101);
+exit_is_num($cmd_pref . $cmd_base . " --count" . $cmd_suffix, 105);
+exit_is_num($cmd_pref . $cmd_base . " --count=adads" . $cmd_suffix, 105);
 
-exit_is_num($cmd_pref . $cmd_base . " -c=0" . $cmd_suffix, 2);
-exit_is_num($cmd_pref . $cmd_base . " -c=-10" . $cmd_suffix, 2);
-exit_is_num($cmd_pref . $cmd_base . " -c" . $cmd_suffix, 5);
-exit_is_num($cmd_pref . $cmd_base . " -c=adads" . $cmd_suffix, 5);
+exit_is_num($cmd_pref . $cmd_base . " -c=0" . $cmd_suffix, 101);
+exit_is_num($cmd_pref . $cmd_base . " -c=-10" . $cmd_suffix, 101);
+exit_is_num($cmd_pref . $cmd_base . " -c" . $cmd_suffix, 105);
+exit_is_num($cmd_pref . $cmd_base . " -c=adads" . $cmd_suffix, 105);
 
 `$rm_cmd`;
 exit_is_num($cmd_pref . $cmd_base . " -c=4 " . $cmd_suffix, 0);
