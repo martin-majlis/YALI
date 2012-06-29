@@ -99,7 +99,7 @@ Only two changes are required to commands presented in section L<Language Identi
     
 =head1 Modules
 
-=head2 Language Identification
+=head2 Language Identification with Own Models
 
     use Lingua::YALI::LanguageIdentifier;
     
