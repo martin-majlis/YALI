@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 15;
 use Test::Exception;
 use File::Basename;
 use Carp;
@@ -45,5 +45,12 @@ ok(! -f $file, "file $file was created");
 #my $wrong_file2 = "/tmp/";
 #dies_ok { $builder->store($wrong_file2, 2, 2) } "File is not writeable";
 
+
+my $builder2 = Lingua::YALI::Builder->new(ngrams=>[2,3,4]);
+`$rm_cmd`;
+dies_ok { $builder2->store($file, 2) } "Storing model without any training";
+ok( ! -f $file, "file $file was created");
+
+`$rm_cmd`;
 
 `$rm_cmd`;

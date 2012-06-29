@@ -11,7 +11,7 @@ my $rm_cmd = "rm -rf tmp.*";
 
 my $input_file = dirname(__FILE__) . "/../LanguageIdentifier/files.txt";
 
-my $cmd_base = dirname(__FILE__) . "/../../bin/yali-language-identifier";
+my $cmd_base = $^X . " " . dirname(__FILE__) . "/../../bin/yali-language-identifier";
 my $cmd_suffix = " -l='ces eng'";
 
 my $cmd_full = "";

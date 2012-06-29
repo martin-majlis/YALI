@@ -10,7 +10,7 @@ my $tmp_file = "tmp.yali-builder.out.gz";
 my $rm_cmd = "rm -rf tmp.*";
 
 my $cmd_pref = "echo 'ahoj jak' | ";
-my $cmd_base = dirname(__FILE__) . "/../../bin/yali-language-identifier";
+my $cmd_base = $^X . " " . dirname(__FILE__) . "/../../bin/yali-language-identifier";
 my $cmd_suffix = "";
 
 my $cmd_full = "";

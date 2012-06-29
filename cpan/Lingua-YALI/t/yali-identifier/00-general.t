@@ -6,9 +6,10 @@ use Time::HiRes;
 use Test::Command;
 use File::Basename;
 
-my $cmd_base = dirname(__FILE__) . "/../../bin/yali-identifier";
+my $script_file = dirname(__FILE__) . "/../../bin/yali-identifier";
+my $cmd_base = $^X . " " . $script_file;
 
-ok(-x $cmd_base);
+ok(-x $script_file);
 
 exit_is_num($cmd_base . " --unknownoption", 105);
 exit_is_num($cmd_base, 101);

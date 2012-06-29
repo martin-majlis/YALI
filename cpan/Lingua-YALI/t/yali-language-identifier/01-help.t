@@ -6,7 +6,7 @@ use Time::HiRes;
 use Test::Command;
 use File::Basename;
 
-my $cmd_base = dirname(__FILE__) . "/../../bin/yali-language-identifier";
+my $cmd_base = $^X . " " . dirname(__FILE__) . "/../../bin/yali-language-identifier";
 
 my $cmd_full = "";
 
