@@ -42,16 +42,17 @@ if ( $supported ) {
     exit;
 }
 
+# check output format
 if ( $format ne "single" && $format ne "all" && $format ne "all_p" && $format ne "tabbed" ) {
     pod2usage(-exitval => 101, -msg => "Unsupported format $format.");
 }
 
-# 
+# reading input from STDIN is default
 if ( ! defined($input_file) && ! defined($file_list) ) {
     $input_file = "-";
 }
 
-# it is incorrect when parameter filelist and input are specified
+# it is incorrect when parameter filelist and input are both specified
 if ( defined($input_file) && defined($file_list) ) {
     pod2usage(-exitval => 101, -msg => "Options --filelist and --input can not be specified in the same time.");
 }
@@ -64,6 +65,7 @@ if ( ! defined($languages) ) {
 my @languages = split(/ /, $languages);
 $identifier->add_language(@languages);
 
+# identify languages
 if ( defined($input_file) ) {
     if ( $input_file eq "-" ) {
         Lingua::YALI::_identify_fh($identifier, \*STDIN, $format, \@languages);
@@ -93,6 +95,8 @@ if ( defined($input_file) ) {
 
 yali-language-identifier [options]
 
+Identify languages with pretrained models.
+
 Options:
 
  -i, --input=F         input file. When F is -, read standard input. 
@@ -116,6 +120,6 @@ EXAMPLES:
 
 More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples> 
 
-Version: 0.010_01 (2012-06-29)
+Version: 0.010_02 (2012-06-29)
 
 =cut
