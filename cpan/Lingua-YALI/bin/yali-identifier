@@ -126,6 +126,9 @@ FORMAT:
  all_p    - prints out all classes with probability sorted according to their probability descendetly
  tabbed   - prints out probabilities of classes separated by tab in order used in --classes
 
-More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples> 
+More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples>
+
+Version: 0.010_01 (2012-06-29)
+
 =cut
 

@@ -27,10 +27,14 @@ test-simple:
 	
 build:
 	version=`cat dist.ini  | grep version | cut -f3 -d" "`; \
+	date=`date +"%Y-%m-%d"`; \
+	for file in bin/*; do \
+		sed -ri "s/^Version.*/Version: $$version ($$date)/" $$file; \
+	done; \
 	rm -rf Lingua-*-$$version*; \
 	dzil build
 
-release:
+release: build
 	rm -v doc_*; \
 	dzil release;
 
