@@ -1,5 +1,5 @@
 package Lingua::YALI::Builder;
-# ABSTRACT: Constructs model for document identification.
+# ABSTRACT: Constructs language models for language identification.
 
 use strict;
 use warnings;
@@ -16,15 +16,20 @@ use POSIX;
 
 This modul creates models for L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
 
+If your texts are from specific domain you can achive better 
+results when your models will be trained on texts from the same domain.
+
 Creating bigram and trigram models from a string.
 
     use Lingua::YALI::Builder;
     my $builder = Lingua::YALI::Builder->new(ngrams=>[2, 3]);
     $builder->train_string("aaaaa aaaa aaa aaa aaa aaaaa aa");
+    $builder->train_string("aa aaaaaa aa aaaaa aaaaaa aaaaa");
     $builder->store("model_a.2_4.gz", 2, 4);
     $builder->store("model_a.2_all.gz", 2);
     $builder->store("model_a.3_all.gz", 3);
-    $builder->store("model_a.4_all.gz", 4); // croaks
+    $builder->store("model_a.4_all.gz", 4);
+    # croaks because 4-grams were not trained
 
 More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
@@ -36,25 +41,48 @@ subtype 'PositiveInt',
       message { "The number you provided, $_, was not a positive number" };
 
 
-has 'ngrams' => ( is => 'ro', isa => 'ArrayRef[PositiveInt]', required => 1 );
-has '_max_ngram' => ( is => 'rw', isa => 'Int' );
-has '_dict' => ( is => 'rw', isa => 'HashRef' );
+# list of all n-gram sizes that will be used during training
+has 'ngrams' => (
+    is => 'ro',
+    isa => 'ArrayRef[PositiveInt]',
+    required => 1
+    );
+
+# the greatest n-gram size
+# i.e. ngrams = [1, 2, 3]; _max_ngram = 3
+has '_max_ngram' => (
+    is => 'rw',
+    isa => 'Int'
+    );
+
+# hash of all n-grams
+# After procissing string 'ab' and n-grams set to [ 1, 2]:
+# _dict => { 1 => { 'a' => 1, 'b' => 1}; 2 => { 'ab' => 1 } }
+has '_dict' => (
+    is => 'rw',
+    isa => 'HashRef'
+    );
 
 =method BUILD
 
     BUILD()
 
-Constructs C<Builder>. It also removes duplicities from C<ngrams>.
+Constructs C<Builder>.
 
     my $builder = Lingua::YALI::Builder->new(ngrams=>[2, 3, 4]);
 
 =cut
+
 sub BUILD
 {
     my $self = shift;
+
+    # keep only unique n-gram sizes
     my @unique = uniq( @{$self->{ngrams}} );
     my @sorted = sort { $a <=> $b } @unique;
     $self->{ngrams} = \@sorted;
+    
+    # select the greatest n-gram
     $self->{_max_ngram} = $sorted[$#sorted];
 }
 
@@ -64,12 +92,12 @@ sub BUILD
     my \@ngrams = $builder->get_ngrams()
 
 Returns all n-grams that will be used during training.
- 
+
     my $builder = Lingua::YALI::Builder->new(ngrams=>[2, 3, 4, 2, 3]);
     my $ngrams = $builder->get_ngrams();
-    print join(", ", @$ngras) . "\n";
-    // prints out 2, 3, 4
-    
+    print join(", ", @$ngrams) . "\n";
+    # prints out 2, 3, 4
+
 =cut
 
 sub get_ngrams
@@ -86,7 +114,7 @@ Returns the highest n-gram size that will be used during training.
 
     my $builder = Lingua::YALI::Builder->new(ngrams=>[2, 3, 4]);
     print $builder->get_max_ngram() . "\n";
-    // prints out 4
+    # prints out 4
 
 =cut
 
@@ -100,7 +128,7 @@ sub get_max_ngram
 
     my $used_bytes = $builder->train_file($file)
 
-Trains classifier on file C<$file> and returns the amount of bytes used for trainig. 
+Uses file C<$file> for training and returns the amount of bytes used.
 
 =over
 
@@ -119,6 +147,8 @@ For more details look at method L</train_handle>.
 sub train_file
 {
     my ( $self, $file ) = @_;
+    
+    # parameter check
     if ( ! defined($file) ) {
         return;
     }
@@ -132,7 +162,7 @@ sub train_file
 
     my $used_bytes = $builder->train_string($string)
 
-Trains classifier on string C<$string> and returns the amount of bytes used for trainig. 
+Uses string C<$string> for training and returns the amount of bytes used.
 
 =over
 
@@ -150,6 +180,7 @@ sub train_string
 {
     my ( $self, $string ) = @_;
 
+    # parameter check
     if ( ! defined($string) ) {
         return;
     }
@@ -167,7 +198,7 @@ sub train_string
 
     my $used_bytes = $builder->train_handle($fh)
 
-Trains classifier on file handle C<$fh> and returns the amount of bytes used for trainig. 
+Uses file handle C<$fh> for training and returns the amount of bytes used.
 
 =over
 
@@ -180,12 +211,14 @@ Trains classifier on file handle C<$fh> and returns the amount of bytes used for
 =back
 
 =cut
+
 sub train_handle
 {
     my ($self, $fh) = @_;
 
 #    print STDERR "\nX\n" . (ref $fh) . "\nX\n";
 
+    # parameter check
     if ( ! defined($fh) ) {
         return;
     } elsif ( ref $fh ne "GLOB" ) {
@@ -218,7 +251,7 @@ sub train_handle
 
             my $act_length = bytes::length($_);
             $total_length += $act_length;
-                    
+
             for my $i (0 .. $act_length - $self->{_max_ngram}) {
                 $sub = substr($_, $i, $self->{_max_ngram});
                 for my $j (@ngrams) {
@@ -241,14 +274,14 @@ sub train_handle
 
     my $stored_count = $builder->store($file, $ngram, $count)
 
-Stores trained model with at most C<$count> C<$ngram>-grams to file C<$file>. 
+Stores trained model with at most C<$count> C<$ngram>-grams to file C<$file>.
 If count is not specified all C<$ngram>-grams are stored.
 
 =over
 
-=item * It croaks if incorrect parameters are passed.
+=item * It croaks if incorrect parameters are passed or it was not trained.
 
-=item * It returns the amount of n-grams stored.
+=item * It returns the amount of stored n-grams.
 
 =back
 
@@ -258,6 +291,7 @@ sub store
 {
     my ($self, $file, $ngram, $count) = @_;
 
+    # parameter check
     if ( ! defined($file) ) {
         croak("parametr file has to be specified");
     }
@@ -281,13 +315,19 @@ sub store
     if ( $count < 1 ) {
         croak("At least one n-gram has to be saved. Count was set to: $count");
     }
+    
+    if ( ! defined($self->{_dict}->{$self->get_max_ngram()}) ) {
+        croak("No training data was used.");
+    }
 
+    # open file
     open(my $fhModel, ">:gzip:bytes", $file) or croak($!);
 
+    # prints out n-gram size
     print $fhModel $ngram . "\n";
 
     my $i = 0;
-        
+
     {
         no warnings;
 
@@ -300,7 +340,7 @@ sub store
     }
 
     close($fhModel);
-    
+
     return ($i - 1);
 }
 
@@ -308,7 +348,9 @@ sub store
 
 =over
 
-=item * Identifier for these models is L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
+=item * Trained models are suitable for L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
+
+=item * There is also command line tool L<yali-builder|Lingua::YALI::yali-builder> with similar functionality.
 
 =item * Source codes are available at L<https://github.com/martin-majlis/YALI>.
 
