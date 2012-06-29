@@ -1,8 +1,6 @@
 package Lingua::YALI::LanguageIdentifier;
 # ABSTRACT: Module for language identification.
 
-=encoding utf8
-=cut
 use strict;
 use warnings;
 use File::ShareDir;
@@ -23,15 +21,15 @@ has '_language_model' => (is => 'rw', isa => 'HashRef');
 This modul is for language identification and can identify 122 languages.
 
     use Lingua::YALI::LanguageIdentifier;
-    
-    // create identifier and register languages
+
+    # create identifier and register languages
     my $identifier = Lingua::YALI::LanguageIdentifier->new();
     $identifier->add_language("ces", "eng")
-    
-    // identify string
+
+    # identify string
     my $result = $identifier->identify_string("CPAN, the Comprehensive Perl Archive Network, is an archive of modules written in Perl.");
     print "The most probable language is " . $result->[0]->[0] . ".\n";
-    // prints out The most probable language is eng.    
+    # prints out The most probable language is eng.
 
 More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
@@ -43,15 +41,15 @@ More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
     my $added_languages = $identifier->add_languages(@languages)
 
 Registres new languages C<@languages> for identification and returns
-the amount of newly added languages. Languages are identified by their 
+the amount of newly added languages. Languages are identified by their
 ISO 639-3 code.
 
 It croaks when unsupported language is used.
 
     print $identifier->add_languages("ces", "deu", "eng") . "\n";
-    // prints out 3
+    # prints out 3
     print $identifier->add_languages("ces", "slk") . "\n";
-    // prints out 1
+    # prints out 1
 
 =cut
 
@@ -64,6 +62,7 @@ sub add_language
         $self->get_available_languages();
     }
 
+    # register languages
     my $added_languages = 0;
     for my $lang (@languages) {
         if ( ! defined($self->{_language_model}->{$lang}) ) {
@@ -79,18 +78,19 @@ sub add_language
 
     my $removed_languages = $identifier->remove_languages(@languages)
 
-Remove languages C<@languages> for identification and returns the amount
-of removed languages.
+Remove languages C<@languages> and returns the amount of removed languages.
 
 It croaks when unsupported language is used.
 
-    $identifier->add_languages("ces", "deu", "eng")
+    print $identifier->add_languages("ces", "deu", "eng")
+    # prints out 3
     print $identifier->remove_languages("ces", "slk") . "\n";
-    // prints out 1
+    # prints out 1
     print $identifier->remove_languages("ces", "slk") . "\n";
-    // prints out 0
+    # prints out 0
 
 =cut
+
 sub remove_language
 {
     my ($self, @languages) = @_;
@@ -100,6 +100,7 @@ sub remove_language
         $self->get_available_languages();
     }
 
+    # remove languages
     my $removed_languages = 0;
     for my $lang (@languages) {
         if ( ! defined($self->{_language_model}->{$lang}) ) {
@@ -136,8 +137,8 @@ Returns all available languages. Currently there is 122 languages (L</LANGUAGES>
 sub get_available_languages
 {
     my $self = shift;
+    
     # Get a module's shared files directory
-
     if ( ! defined($self->_languages) ) {
 
         my $dir = File::ShareDir::dist_dir('Lingua-YALI');
@@ -148,7 +149,7 @@ sub get_available_languages
             my $language = $file;
             $language =~ s/\Q$dir\E.//;
             $language =~ s/.yali.gz//;
-            
+
             push(@languages, $language);
             $self->{_language_model}->{$language} = $file;
         }
@@ -450,7 +451,9 @@ More details about supported languages may be found at L<http://ufal.mff.cuni.cz
 
 =over
 
-=item * General version for this identifier is L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
+=item * Identifier for own models is L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
+
+=item * There is also command line tool L<yali-language-identifier|Lingua::YALI::yali-language-identifier> with similar functionality.
 
 =item * Source codes are available at L<https://github.com/martin-majlis/YALI>.
 

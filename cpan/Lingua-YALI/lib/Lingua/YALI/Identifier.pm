@@ -10,21 +10,42 @@ use Lingua::YALI;
 
 # VERSION
 
-has '_model_file' => ( is => 'rw', isa => 'HashRef' );
-has '_frequency' => ( is => 'rw', isa => 'HashRef' );
-has '_models_loaded' => ( is => 'rw', isa => 'HashRef' );
-has '_ngram' => ( is => 'rw', isa => 'Int' );
-has '_classes' =>  ( is => 'rw', isa => 'ArrayRef' );
+# hash with paths to models
+# format: { 'class1' => 'file1', 'class2' => 'file2' }
+has '_model_file' => (
+    is => 'rw',
+    isa => 'HashRef'
+    );
+
+# hash with n-gram frequencies retrieved from models
+# format: { 'ngram1' => { 'class1' => 0.5, 'class2' => 0.3}, 'ngram2' => ...}
+has '_frequency' => (
+    is => 'rw',
+    isa => 'HashRef'
+    );
+
+# n-gram size
+has '_ngram' => (
+    is => 'rw',
+    isa => 'Int'
+    );
+
+# list of identified classes
+has '_classes' =>  (
+    is => 'rw',
+    isa => 'ArrayRef'
+    );
 
 =head1 SYNOPSIS
 
-This modul is generalizatin of L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> and can identify
-any document class based on used models.
+This modul identify languages with moduls provided by the user. If you want to use pretrained models use L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>.
+
+Models trained on texts from specific domain outperforms the general ones.
 
     use Lingua::YALI::Builder;
     use Lingua::YALI::Identifier;
-    
-    // create models
+
+    # create models
     my $builder_a = Lingua::YALI::Builder->new(ngrams=>[2]);
     $builder_a->train_string("aaaaa aaaa aaa aaa aaa aaaaa aa");
     $builder_a->store("model_a.2_all.gz", 2);
@@ -33,19 +54,19 @@ any document class based on used models.
     $builder_b->train_string("bbbbbb bbbb bbbb bbb bbbb bbbb bbb");
     $builder_b->store("model_b.2_all.gz", 2);
 
-    // create identifier and load models
+    # create identifier and load models
     my $identifier = Lingua::YALI::Identifier->new();
     $identifier->add_class("a", "model_a.2_all.gz");
     $identifier->add_class("b", "model_b.2_all.gz");
 
-    // identify strings
+    # identify strings
     my $result1 = $identifier->identify_string("aaaaaaaaaaaaaaaaaaa");
     print $result1->[0]->[0] . "\t" . $result1->[0]->[1];
-    // prints out a 1
-    
+    # prints out a 1
+
     my $result2 = $identifier->identify_string("bbbbbbbbbbbbbbbbbbb");
     print $result2->[0]->[0] . "\t" . $result2->[0]->[1];
-    // prints out b 1
+    # prints out b 1
 
 More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
@@ -55,18 +76,17 @@ More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
 Initializes internal variables.
 
-    // create identifier
+    # create identifier
     my $identifier = Lingua::YALI::Identifier->new();
 
 =cut
+
 sub BUILD
 {
     my $self = shift;
     my %frequency = ();
-    my %models_loaded = ();
     my @classes = ();
     $self->{_frequency} = \%frequency;
-    $self->{_models_loaded} = \%models_loaded;
     $self->{_classes} = \@classes;
 
     return;
@@ -74,15 +94,15 @@ sub BUILD
 
 =method add_class
 
-    $added = $identifier->add_class($label, $model)
+    $added = $identifier->add_class($class, $model)
 
-Adds model stored in file C<$model> with label C<$label> and
+Adds model stored in file C<$model> with class C<$class> and
 returns whether it was added or not.
 
-    print $identifier->add_class("a", "model.a1.gz") . "\n"; 
-    // prints out 1
+    print $identifier->add_class("a", "model.a1.gz") . "\n";
+    # prints out 1
     print $identifier->add_class("a", "model.a2.gz") . "\n";
-    // prints out 0 - class a was already added
+    # prints out 0 - class a was already added
 
 =cut
 
@@ -94,6 +114,7 @@ sub add_class
         return 0;
     }
 
+    # parameter check
     if ( ! defined($file) ) {
         croak("Model has to be specified.");
     }
@@ -111,13 +132,14 @@ sub add_class
 
      my $removed = $identifier->remove_class($class);
 
-Removes model for label $label.
+Removes model for class C<$class>.
 
     $identifier->add_class("a", "model.a1.gz");
-    print $identifier->remove_class("a") . "\n"; 
-    // prints out 1
     print $identifier->remove_class("a") . "\n";
-    // prints out 0 - class a was already removed     
+    # prints out 1
+    print $identifier->remove_class("a") . "\n";
+    # prints out 0 - class a was already removed
+
 =cut
 
 sub remove_class
@@ -140,6 +162,7 @@ sub remove_class
 Returns all registered classes.
 
 =cut
+
 sub get_classes
 {
     my $self    = shift;
@@ -163,14 +186,15 @@ Identifies class for file C<$file>.
 =back
 
 =cut
+
 sub identify_file
 {
     my ( $self, $file ) = @_;
-    
+
     if ( ! defined($file) ) {
         return;
     }
-    
+
     my $fh = Lingua::YALI::_open($file);
 
     return $self->identify_handle($fh);
@@ -200,7 +224,7 @@ sub identify_string
     if ( ! defined($string) ) {
         return;
     }
-
+    
     my $result = $self->identify_handle($fh);
 
     close($fh);
@@ -220,17 +244,23 @@ Identifies class for file handle C<$fh> and returns:
 
 =item * It croaks if the C<$fh> is not file handle.
 
-=item * It returns array reference in format [ ['class1', score1], ['class2', score2], ...] sorted 
+=item * It returns array reference in format [ ['class1', score1], ['class2', score2], ...] sorted
 according to score descendently, so the most probable class is the first.
 
 =back
 
-
 =cut
+
 sub identify_handle
 {
     my ($self, $fh, $verbose) = @_;
     my %actRes = ();
+
+    # parameter check
+    my $ngram = $self->{_ngram};
+    if ( ! defined($ngram) ) {
+        croak("At least one class must be specified.");
+    }
 
     if ( ! defined($fh) ) {
         return;
@@ -238,13 +268,7 @@ sub identify_handle
         croak("Expected file handler but " . (ref $fh) . " was used.");
     }
 
-#    my $padding = $self->{_padding};
-    my $ngram = $self->{_ngram};
-
-    if ( ! defined($ngram) ) {
-        croak("At least one class must be specified.");
-    }
-
+    # read input file
     while ( <$fh> ) {
         chomp;
         s/ +/ /g;
@@ -270,9 +294,9 @@ sub identify_handle
                 }
             }
         }
-
     }
 
+    # sum scores of all classifiers
     my @allLanguages = @ { $self->get_classes() };
 
     my $sum = 0;
@@ -284,6 +308,7 @@ sub identify_handle
         $sum += $score;
     }
 
+    # normalize results
     my @res = ();
     if ( $sum > 0 ) {
         for my $l (@allLanguages) {
@@ -303,24 +328,29 @@ sub identify_handle
 #    print STDERR "\nY\n\t" . $res[1]->[0] . "\nY\n";
 #    print STDERR "\nY\n\t" . $res[1]->[1] . "\nY\n";
 
+    # sort according to score
     my @sortedRes = sort { $b->[1] <=> $a->[1] } @res;
 
     return \@sortedRes;
 }
 
+# recompute classes after manipulation with classes
 sub _compute_classes
 {
     my $self    = shift;
     my @classes = keys %{ $self->{_model_file} };
 
     $self->{_classes} = \@classes;
+
+    return;
 }
 
+# load model
 sub _load_model
 {
     my ($self, $class, $file) = @_;
 
-    if ( $self->{_models_loaded}->{$class} ) {
+    if ( $self->{_model_file}->{$class} ) {
         return;
     }
 
@@ -353,23 +383,22 @@ sub _load_model
 
     close($fh);
 
-    $self->{_models_loaded}->{$class} = 1;
     $self->{_model_file}->{$class} = $file;
-    $self->_compute_classes();   
+    $self->_compute_classes();
 
     return;
 }
 
+# unload model
 sub _unload_model
 {
     my ($self, $class) = @_;
 
-    if ( ! $self->{_models_loaded}->{$class} ) {
+    if ( ! $self->{_model_file}->{$class} ) {
         return;
     }
 
-    delete($self->{_models_loaded}->{$class});
-    delete( $self->{_model_file}->{$class} );   
+    delete( $self->{_model_file}->{$class} );
     $self->_compute_classes();
 
     my $classes = $self->get_classes();
@@ -377,9 +406,9 @@ sub _unload_model
     if ( scalar @$classes == 0 ) {
         delete($self->{_ngram});
         $self->{_ngram} = undef;
-    }    
-    
-    
+    }
+
+
 
 
     return;
@@ -392,6 +421,8 @@ sub _unload_model
 =item * Identifier with pretrained models for language identification is L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>.
 
 =item * Builder for these models is L<Lingua::YALI::Builder|Lingua::YALI::Builder>.
+
+=item * There is also command line tool L<yali-identifier|Lingua::YALI::yali-identifier> with similar functionality.
 
 =item * Source codes are available at L<https://github.com/martin-majlis/YALI>.
 
