@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Time::HiRes;
 use Test::Command;
 use File::Basename;
@@ -15,14 +15,25 @@ my $cmd_pref = "echo 'ahoj jak' | ";
 my $cmd_base = dirname(__FILE__) . "/../../bin/yali-identifier";
 my $cmd_suffix = "";
 
+my $cmd_full = "";
+
 exit_is_num($cmd_pref . $cmd_base . " --classes" . $cmd_suffix, 105);
 exit_is_num($cmd_pref . $cmd_base . " --classes=" . $cmd_suffix, 105);
 
 exit_is_num($cmd_pref . $cmd_base . " -c" . $cmd_suffix, 105);
 exit_is_num($cmd_pref . $cmd_base . " -c=" . $cmd_suffix, 105);
 
-exit_is_num($cmd_pref . $cmd_base . " -c=$class_file" . $cmd_suffix, 0);
-exit_is_num($cmd_pref . $cmd_base . " --classes=$class_file" . $cmd_suffix, 0);
+my $stderr = "File model.a1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.a1.gz instead. at ".$cmd_base." line 78, <\$fh_classes> line 1.\n";
+$stderr .= "File model.b1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.b1.gz instead. at ".$cmd_base." line 78, <\$fh_classes> line 2.\n";
+
+
+$cmd_full = $cmd_pref . $cmd_base . " -c=$class_file" . $cmd_suffix;
+exit_is_num($cmd_full, 0);
+stderr_is_eq($cmd_full, $stderr, $cmd_full);
+
+$cmd_full = $cmd_pref . $cmd_base . " --classes=$class_file" . $cmd_suffix;
+exit_is_num($cmd_full, 0);
+stderr_is_eq($cmd_full, $stderr, $cmd_full);
 
 exit_is_num($cmd_pref . $cmd_base . " -c=unknown_file" . $cmd_suffix, 2);
 
