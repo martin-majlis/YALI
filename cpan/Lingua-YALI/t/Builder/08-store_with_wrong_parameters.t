@@ -6,6 +6,12 @@ use Test::Exception;
 use File::Basename;
 use Carp;
 
+# http://od-eon.com/blogs/calvin/zcat-bug-mac-osx/
+my $zcat_cmd = "zcat ";
+if ( $^O eq "darwin" ) {
+    $zcat_cmd = "gzcat ";
+}
+
 my $rm_cmd ="rm -f " . dirname(__FILE__) . "/tmp.*";
 `$rm_cmd`;
 
