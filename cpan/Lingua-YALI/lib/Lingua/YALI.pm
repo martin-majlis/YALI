@@ -11,6 +11,10 @@ use Carp;
 
 The YALI package is collection of modules and tools for language identification.
 
+It was developed at L<Institute of Formal and Applied Linguistics|http://ufal.mff.cuni.cz/> at Charles University in Prague.
+
+More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~majlis/yali/>.
+
 =head2 Modules
 
 =over    
