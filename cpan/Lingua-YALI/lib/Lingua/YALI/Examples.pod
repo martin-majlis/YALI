@@ -68,9 +68,9 @@ language models for L<122 languages|Lingua::YALI::LanguageIdentifier/LANGUAGES>.
     # when --filelist or --input is not used then it is equal to -i=-
     cat fra.20.txt | yali-identifier -l="eng ces fra" -f=all_p
 
-=head2 Building Own Models
+=head2 Building Your Own Models
 
-If you have texts from specific domain it is worth to train own models on texts from this domain to achieve higher accuracy.
+If you have texts from specific domain it is worth to train your own models on texts from this domain to achieve higher accuracy.
 
 Options C<--filelist> and C<--input> has same meaning as options for L</"Language Identification  with Pretrained Models">.
 
@@ -97,9 +97,9 @@ Options C<--filelist> and C<--input> has same meaning as options for L</"Languag
     echo -e "eng\tmodel.2.5.eng.gz" >> list.models.2
     echo -e "fra\tmodel.2.5.fra.gz" >> list.models.2
 
-=head2 Language Identification  with Own Models
+=head2 Language Identification  with Your Own Models
 
-Only two changes are required to commands presented in section L<Language Identification  with Pretrained Models>.
+Only two changes are required to the commands presented in section L<Language Identification  with Pretrained Models>.
 
 =over
 
@@ -131,7 +131,7 @@ Only two changes are required to commands presented in section L<Language Identi
 
 This section provides information how to use modules L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>, L<Lingua::YALI::Builder|Lingua::YALI::Builder>, and L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
 
-=head2 Language Identification with Own Models
+=head2 Language Identification with Your Own Models
 
 This example shows how to detect languages with L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>.
 
@@ -160,7 +160,7 @@ This example shows how to detect languages with L<Lingua::YALI::LanguageIdentifi
     print "The most probable language is " . $result_h->[0]->[0] . ".\n";
     # hopefully prints out The most probable language is fra.     
 
-=head2 Training Own Models
+=head2 Training Your Own Models
 
 This example shows how to train language models with L<Lingua::YALI::Builder|Lingua::YALI::Builder>.
 
@@ -191,7 +191,7 @@ This example shows how to train language models with L<Lingua::YALI::Builder|Lin
         print STDERR "\tDONE\n";
     }
     
-=head2 Using Own Models
+=head2 Using Your Own Models
 
 This example shows how to use trained language models with L<Lingua::YALI::Identifier|Lingua::YALI::Identifier>.
 

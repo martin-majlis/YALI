@@ -9,9 +9,9 @@ use Carp;
 
 =head1 SYNOPSIS
 
-The YALI package is collection of modules and tools for language identification.
+The YALI package is a collection of modules and tools for language identification.
 
-It was developed at L<Institute of Formal and Applied Linguistics|http://ufal.mff.cuni.cz/> at Charles University in Prague.
+It was developed at the L<Institute of Formal and Applied Linguistics|http://ufal.mff.cuni.cz/> at Charles University in Prague.
 
 More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~majlis/yali/>.
 
@@ -21,11 +21,11 @@ More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~ma
 
 =item * L<Lingua::YALI::Examples|Lingua::YALI::Examples> - contains examples.
 
-=item * L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> - is module for language identification capable of identifying 122 languages.
+=item * L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> - is a language identification module capable of identifying 122 languages.
 
-=item * L<Lingua::YALI::Builder|Lingua::YALI::Builder> - is module for training custom language models.
+=item * L<Lingua::YALI::Builder|Lingua::YALI::Builder> - is a module used to train custom language models.
 
-=item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use own models for identification.
+=item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use your own models for identification.
 
 =back
 
@@ -33,11 +33,11 @@ More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~ma
 
 =over    
 
-=item * L<yali-language-identifier|Lingua::YALI::yali-language-identifier> - tool for language identification with pretrained models
+=item * L<yali-language-identifier|Lingua::YALI::yali-language-identifier> - tool for a language identification with pretrained models
 
-=item * L<yali-builder|Lingua::YALI::yali-builder> - tool for building custom language models.
+=item * L<yali-builder|Lingua::YALI::yali-builder> - tool for a building custom language models.
 
-=item * L<yali-identifier|Lingua::YALI::yali-identifier> - tool for language identification with custom language models.
+=item * L<yali-identifier|Lingua::YALI::yali-identifier> - tool for a language identification with custom language models.
 
 =back
 
@@ -96,17 +96,31 @@ sub _open
     return $hdl;
 }
 
-sub _identify_fh
+sub _identify_handle
 {
-    my ($identifier, $fh, $format, $languages) = @_;
-    my $result = $identifier->identify_handle($fh);
-    _print_result($result, $format, $languages);
+    my ($identifier, $fh, $format, $languages, $each_line) = @_;
+    if ( $each_line ) {
+        while (<$fh>) {
+            chomp;
+            _identify_string($identifier, $_, $format, $languages);
+        }
+    } else {
+        my $result = $identifier->identify_handle($fh);
+        _print_result($result, $format, $languages);
+    }
 }
 
 sub _identify
 {
-    my ($identifier, $file, $format, $languages) = @_;
-    my $result = $identifier->identify_file($file);
+    my ($identifier, $file, $format, $languages, $each_line) = @_;
+    my $fh = Lingua::YALI::_open($file);
+    _identify_handle($identifier, $fh, $format, $languages, $each_line);
+}
+
+sub _identify_string
+{
+    my ($identifier, $string, $format, $languages) = @_;
+    my $result = $identifier->identify_string($string);
     _print_result($result, $format, $languages);
 }
 

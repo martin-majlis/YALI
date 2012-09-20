@@ -23,7 +23,7 @@ my $a_string = "";
 while ( <$fh_a> ) {
     $a_string .= $_;
 }
-is($builder->train_string($a_string), 249, "training on input");
+is($builder->train_string($a_string), 332, "training on input");
 
 # =======
 

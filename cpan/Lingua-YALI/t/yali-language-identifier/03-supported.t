@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 10;
 use Time::HiRes;
 use Test::Command;
 use File::Basename;
@@ -22,8 +22,9 @@ exit_is_num($cmd_pref . $cmd_base . " -s=-10" . $cmd_suffix, 105);
 $cmd_full = $cmd_pref . $cmd_base . " -s " . $cmd_suffix;
 exit_is_num($cmd_full, 0);
 stderr_is_eq($cmd_full, "", $cmd_full);
-stdout_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "122\n", "there is 122 supported languages");
-stderr_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "", $cmd_full. " | wc -l | sed -r 's/ //g' ");
+# sed does not work on solaris and darwin
+#stdout_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "122\n", "there is 122 supported languages");
+#stderr_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "", $cmd_full. " | wc -l | sed -r 's/ //g' ");
 
 stdout_is_eq($cmd_full . " | " . $cmd_wc, "122", "there is 122 supported languages");
 
@@ -32,9 +33,10 @@ $cmd_full = $cmd_pref . $cmd_base . " --supported" . $cmd_suffix;
 exit_is_num($cmd_full, 0);
 stderr_is_eq($cmd_full, "", $cmd_full);
 
-stdout_is_eq($cmd_full . " | wc -l | sed -r 's/ //g' ", "122\n", "there is 122 supported languages");
-stderr_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "", $cmd_full. " | wc -l | sed -r 's/ //g' ");
-exit_is_num($cmd_full. " | wc -l | sed -r 's/ //g' ", 0);
+# sed does not work on solaris and darwin
+#stdout_is_eq($cmd_full . " | wc -l | sed -r 's/ //g' ", "122\n", "there is 122 supported languages");
+#stderr_is_eq($cmd_full. " | wc -l | sed -r 's/ //g' ", "", $cmd_full. " | wc -l | sed -r 's/ //g' ");
+#exit_is_num($cmd_full. " | wc -l | sed -r 's/ //g' ", 0);
 
 stdout_is_eq($cmd_full . " | " . $cmd_wc, "122", "there is 122 supported languages");
 stderr_is_eq($cmd_full. " | " . $cmd_wc, "", $cmd_full. " | " . $cmd_wc);

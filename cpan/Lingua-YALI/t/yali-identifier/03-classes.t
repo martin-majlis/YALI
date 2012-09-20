@@ -24,8 +24,8 @@ exit_is_num($cmd_pref . $cmd_base . " --classes=" . $cmd_suffix, 105);
 exit_is_num($cmd_pref . $cmd_base . " -c" . $cmd_suffix, 105);
 exit_is_num($cmd_pref . $cmd_base . " -c=" . $cmd_suffix, 105);
 
-my $stderr = "File model.a1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.a1.gz instead. at ".$script_file." line 80, <\$fh_classes> line 1.\n";
-$stderr .= "File model.b1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.b1.gz instead. at ".$script_file." line 80, <\$fh_classes> line 2.\n";
+my $stderr = "File model.a1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.a1.gz instead. at ".$script_file." line 82, <\$fh_classes> line 1.\n";
+$stderr .= "File model.b1.gz does not exist, using ".dirname(__FILE__) . "/../Identifier/model.b1.gz instead. at ".$script_file." line 82, <\$fh_classes> line 2.\n";
 
 
 $cmd_full = $cmd_pref . $cmd_base . " -c=$class_file" . $cmd_suffix;

@@ -10,7 +10,7 @@ BEGIN { use_ok('Lingua::YALI::Builder') };
 my $builder = Lingua::YALI::Builder->new(ngrams=>[2,3,4]);
 
 open(my $fh_a, "<:bytes", dirname(__FILE__) . "/../Identifier/aaa01.txt") or croak $!;
-is($builder->train_handle($fh_a), 249, "training on input");
+is($builder->train_handle($fh_a), 332, "training on input");
 close($fh_a);
 
 is($builder->train_handle(undef), undef, "undef file handler");

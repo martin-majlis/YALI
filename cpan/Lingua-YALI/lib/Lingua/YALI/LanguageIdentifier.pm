@@ -40,7 +40,7 @@ More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
 
     my $added_languages = $identifier->add_languages(@languages)
 
-Registres new languages C<@languages> for identification and returns
+Registers new languages C<@languages> for identification and returns
 the amount of newly added languages. Languages are identified by their
 ISO 639-3 code.
 
