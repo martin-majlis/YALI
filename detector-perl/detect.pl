@@ -216,7 +216,7 @@ sub loadDictionaryFiles
 
 	print STDERR "Reading dictionaries from directory $dir for n-gram $ngram\n";
 
-	return map { /.*\/+([^\/]+)\.[0-9].txt.gz$/; $1 => $_ } 
+	return map { /.*\/+([^\/]+)\.(txt\.)?[0-9].txt.gz$/; my $lang = $1; $lang =~ s/\.txt//; $lang => $_ } 
 			grep { ! /___total___/ } 
 			bsd_glob($dir."/*.$ngram.txt.gz");
 
