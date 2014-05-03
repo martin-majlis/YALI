@@ -32,6 +32,7 @@ build:
 		sed -ri "s/^Version.*/Version: $$version ($$date)/" $$file; \
 	done; \
 	rm -rf Lingua-*-$$version*; \
+	find . -name '*~' -exec rm {} \; ; \
 	dzil build
 
 release: build

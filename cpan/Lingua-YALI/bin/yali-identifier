@@ -63,7 +63,7 @@ open(my $fh_classes, "<", $classes_file) or croak("Not found: $classes_file; " .
 my $class_dir = dirname($classes_file);
 while ( <$fh_classes> ) {
     chomp;
-    
+
     # skip empty lines
     if ( ! $_ ) {
         next;
@@ -102,7 +102,7 @@ if ( defined($input_file) ) {
         $fh_list = \*STDIN;
     } else {
         open($fh_list, "<", $file_list) or croak("Not found: $file_list\n" . $!);
-        $list_dir = dirname($file_list) . "/";        
+        $list_dir = dirname($file_list) . "/";
     }
     while ( my $file = <$fh_list> ) {
         chomp $file;
@@ -121,7 +121,7 @@ Identify languages with models trained by yali-builder.
 
 Options:
 
- -i, --input=F         input file. When F is -, read standard input. 
+ -i, --input=F         input file. When F is -, read standard input.
      --filelist=F      input files are read from F. When F is -, read them from standard input.
  -f, --format=FORMAT   output FORMAT
  -c, --classes=F       file with paths to model. Containing two columns - the first with class, the second one with path to the model.
@@ -136,7 +136,7 @@ FORMAT:
 
 More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples>
 
-Version: 0.011_2 (2012-09-20)
+Version: 0.014_01 (2014-05-03)
 
 =cut
 

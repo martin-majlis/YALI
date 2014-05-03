@@ -137,11 +137,12 @@ Returns all available languages. Currently there is 122 languages (L</LANGUAGES>
 sub get_available_languages
 {
     my $self = shift;
-    
+
     # Get a module's shared files directory
     if ( ! defined($self->_languages) ) {
 
-        my $dir = File::ShareDir::dist_dir('Lingua-YALI');
+        my $dir = "share/";
+        eval { $dir = File::ShareDir::dist_dir('Lingua-YALI'); };
 
         my @languages = ();
 

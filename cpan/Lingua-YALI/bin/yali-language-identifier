@@ -77,12 +77,12 @@ if ( defined($input_file) ) {
 } elsif ( defined($file_list) ) {
     my $fh_list = undef;
     my $list_dir = "";
-    
+
     if ( $file_list eq "-" ) {
         $fh_list = \*STDIN;
     } else {
         open($fh_list, "<", $file_list) or croak("Not found: $file_list\n" . $!);
-        $list_dir = dirname($file_list) . "/";        
+        $list_dir = dirname($file_list) . "/";
     }
     while ( my $file = <$fh_list> ) {
         chomp $file;
@@ -101,7 +101,7 @@ Identify languages with pretrained models.
 
 Options:
 
- -i, --input=F         input file. When F is -, read standard input. 
+ -i, --input=F         input file. When F is -, read standard input.
      --filelist=F      input files are read from F. When F is -, read them from standard input.
  -f, --format=FORMAT   output FORMAT
  -l, --languages=L     ISO 639-3 codes of languages seperated by space
@@ -120,8 +120,8 @@ EXAMPLES:
  Is file /etc/passwd written in english or czech?
  cat /etc/passwd | yali-language-identifier -i=- -l="eng ces"
 
-More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples> 
+More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples>
 
-Version: 0.011_2 (2012-09-20)
+Version: 0.014_01 (2014-05-03)
 
 =cut

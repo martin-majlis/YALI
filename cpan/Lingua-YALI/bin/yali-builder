@@ -94,14 +94,14 @@ Train models for language identification with yali-identifier.
 Options:
 
  -i, --input=F         input file. When F is -, read standard input (default -).
-     --filelist=F      input files are read from F. When F is -, read them from standard input. 
- -o, --output=F        output file  
+     --filelist=F      input files are read from F. When F is -, read them from standard input.
+ -o, --output=F        output file
  -n, --ngram=N         n-gram size (default 4)
  -c, --count           the number of n-grams
  -h, --help            prints documentation
 
 More examples are available at L<http://search.cpan.org/perldoc?Lingua%3A%3AYALI%3A%3AExamples>
 
-Version: 0.011_2 (2012-09-20)
+Version: 0.014_01 (2014-05-03)
 
 =cut

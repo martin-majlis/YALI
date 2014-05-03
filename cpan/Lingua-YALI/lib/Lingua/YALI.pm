@@ -7,68 +7,7 @@ use Carp;
 
 # VERSION
 
-=head1 SYNOPSIS
 
-The YALI package is a collection of modules and tools for language identification.
-
-It was developed at the L<Institute of Formal and Applied Linguistics|http://ufal.mff.cuni.cz/> at Charles University in Prague.
-
-More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~majlis/yali/>.
-
-=head2 Modules
-
-=over    
-
-=item * L<Lingua::YALI::Examples|Lingua::YALI::Examples> - contains examples.
-
-=item * L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> - is a language identification module capable of identifying 122 languages.
-
-=item * L<Lingua::YALI::Builder|Lingua::YALI::Builder> - is a module used to train custom language models.
-
-=item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use your own models for identification.
-
-=back
-
-=head2 Tools
-
-=over    
-
-=item * L<yali-language-identifier|Lingua::YALI::yali-language-identifier> - tool for a language identification with pretrained models
-
-=item * L<yali-builder|Lingua::YALI::yali-builder> - tool for a building custom language models.
-
-=item * L<yali-identifier|Lingua::YALI::yali-identifier> - tool for a language identification with custom language models.
-
-=back
-
-=cut
-
-=head1 WHY TO USE YALI
-
-=over
-
-=item * Contains pretrained models for identifying 122 languages.
-
-=item * Allows to create own models, trained on texts from specific domain, which outperforms the pretrained ones.
-
-=item * It is based on published paper L<http://ufal.mff.cuni.cz/~majlis/yali/>.
-
-=back
-
-=head1 COMPARISON WITH OTHERS
-
-=over
-
-=item * L<Lingua::Lid|Lingua::Lid> can recognize 45 languages and returns only the most probable result without any weight.
-
-=item * L<Lingua::Ident|Lingua::Ident> requires training files, so it is similar to L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>, 
-but it does not provide any options for constructing models.
-
-=item * L<Lingua::Identify|Lingua::Identify> can recognize 33 languages but it does not allows you to use different models. 
-
-=back
-
-=cut
 
 # TODO: refactor - remove bzcat
 sub _open
@@ -143,8 +82,85 @@ sub _print_result
     } else {
         croak("Unsupported format $format");
     }
-    
+
     print $line . "\n";
 }
 
 1;
+
+__END__
+=pod
+
+=head1 SYNOPSIS
+
+The YALI package is a collection of modules and tools for language identification.
+
+It was developed at the L<Institute of Formal and Applied Linguistics|http://ufal.mff.cuni.cz/> at Charles University in Prague.
+
+More information can be found at the L<YALI homepage|http://ufal.mff.cuni.cz/~majlis/yali/>.
+
+=head2 Modules
+
+=over
+
+=item * L<Lingua::YALI::Examples|Lingua::YALI::Examples> - contains examples.
+
+=item * L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier> - is a language identification module capable of identifying 122 languages.
+
+=item * L<Lingua::YALI::Builder|Lingua::YALI::Builder> - is a module used to train custom language models.
+
+=item * L<Lingua::YALI::Identifier|Lingua::YALI::Identifier> - allows to use your own models for identification.
+
+=back
+
+=head2 Tools
+
+=over
+
+=item * L<yali-language-identifier|bin/yali-language-identifier> - tool for a language identification with pretrained models
+
+=item * L<yali-builder|bin/yali-builder> - tool for a building custom language models.
+
+=item * L<yali-identifier|bin/yali-identifier> - tool for a language identification with custom language models.
+
+=back
+
+=head1 WHY TO USE YALI
+
+=over
+
+=item * Contains pretrained models for identifying 122 languages.
+
+=item * Allows to create own models, trained on texts from specific domain, which outperforms the pretrained ones.
+
+=item * It is based on published paper L<http://ufal.mff.cuni.cz/~majlis/yali/>.
+
+=back
+
+=head1 COMPARISON WITH OTHERS
+
+=over
+
+=item * L<Lingua::Lid|Lingua::Lid> can recognize 45 languages and returns only the most probable result without any weight.
+
+=item * L<Lingua::Ident|Lingua::Ident> requires training files, so it is similar to L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>,
+but it does not provide any options for constructing models.
+
+=item * L<Lingua::Identify|Lingua::Identify> can recognize 33 languages but it does not allows you to use different models.
+
+=back
+
+=head1 AUTHOR
+
+Martin Majlis <martin@majlis.cz>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Martin Majlis.
+
+This is free software, licensed under:
+
+  The (three-clause) BSD License
+
+=cut
+

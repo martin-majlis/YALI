@@ -36,50 +36,7 @@ has '_classes' =>  (
     isa => 'ArrayRef'
     );
 
-=head1 SYNOPSIS
 
-This modul identify languages with moduls provided by the user. If you want to use pretrained models use L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>.
-
-Models trained on texts from specific domain outperforms the general ones.
-
-    use Lingua::YALI::Builder;
-    use Lingua::YALI::Identifier;
-
-    # create models
-    my $builder_a = Lingua::YALI::Builder->new(ngrams=>[2]);
-    $builder_a->train_string("aaaaa aaaa aaa aaa aaa aaaaa aa");
-    $builder_a->store("model_a.2_all.gz", 2);
-
-    my $builder_b = Lingua::YALI::Builder->new(ngrams=>[2]);
-    $builder_b->train_string("bbbbbb bbbb bbbb bbb bbbb bbbb bbb");
-    $builder_b->store("model_b.2_all.gz", 2);
-
-    # create identifier and load models
-    my $identifier = Lingua::YALI::Identifier->new();
-    $identifier->add_class("a", "model_a.2_all.gz");
-    $identifier->add_class("b", "model_b.2_all.gz");
-
-    # identify strings
-    my $result1 = $identifier->identify_string("aaaaaaaaaaaaaaaaaaa");
-    print $result1->[0]->[0] . "\t" . $result1->[0]->[1];
-    # prints out a 1
-
-    my $result2 = $identifier->identify_string("bbbbbbbbbbbbbbbbbbb");
-    print $result2->[0]->[0] . "\t" . $result2->[0]->[1];
-    # prints out b 1
-
-More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
-
-=cut
-
-=method BUILD
-
-Initializes internal variables.
-
-    # create identifier
-    my $identifier = Lingua::YALI::Identifier->new();
-
-=cut
 
 sub BUILD
 {
@@ -92,19 +49,6 @@ sub BUILD
     return;
 }
 
-=method add_class
-
-    $added = $identifier->add_class($class, $model)
-
-Adds model stored in file C<$model> with class C<$class> and
-returns whether it was added or not.
-
-    print $identifier->add_class("a", "model.a1.gz") . "\n";
-    # prints out 1
-    print $identifier->add_class("a", "model.a2.gz") . "\n";
-    # prints out 0 - class a was already added
-
-=cut
 
 sub add_class
 {
@@ -128,23 +72,10 @@ sub add_class
     return 1;
 }
 
-=method remove_class
-
-     my $removed = $identifier->remove_class($class);
-
-Removes model for class C<$class>.
-
-    $identifier->add_class("a", "model.a1.gz");
-    print $identifier->remove_class("a") . "\n";
-    # prints out 1
-    print $identifier->remove_class("a") . "\n";
-    # prints out 0 - class a was already removed
-
-=cut
 
 sub remove_class
 {
-    my ( $self, $class, $file ) = @_;
+    my ( $self, $class ) = @_;
 
     if ( defined( $self->{_model_file}->{$class} ) ) {
         $self->_unload_model($class);
@@ -155,13 +86,6 @@ sub remove_class
     return 0;
 }
 
-=method get_classes
-
-    my \@classes = $identifier->get_classes();
-
-Returns all registered classes.
-
-=cut
 
 sub get_classes
 {
@@ -169,23 +93,6 @@ sub get_classes
     return $self->{_classes};
 }
 
-=method identify_file
-
-    my $result = $identifier->identify_file($file)
-
-Identifies class for file C<$file>.
-
-=over
-
-=item * It returns undef if C<$file> is undef.
-
-=item * It croaks if the file C<$file> does not exist or is not readable.
-
-=item * Otherwise look for more details at method L</identify_handle>.
-
-=back
-
-=cut
 
 sub identify_file
 {
@@ -200,21 +107,6 @@ sub identify_file
     return $self->identify_handle($fh);
 }
 
-=method identify_string
-
-    my $result = $identifier->identify_string($string)
-
-Identifies class for string C<$string>.
-
-=over
-
-=item * It returns undef if C<$string> is undef.
-
-=item * Otherwise look for more details at method L</identify_handle>.
-
-=back
-
-=cut
 
 sub identify_string
 {
@@ -224,7 +116,7 @@ sub identify_string
     if ( ! defined($string) ) {
         return;
     }
-    
+
     my $result = $self->identify_handle($fh);
 
     close($fh);
@@ -232,28 +124,10 @@ sub identify_string
     return $result;
 }
 
-=method identify_handle
-
-    my $result = $identifier->identify_handle($fh)
-
-Identifies class for file handle C<$fh> and returns:
-
-=over
-
-=item * It returns undef if C<$fh> is undef.
-
-=item * It croaks if the C<$fh> is not file handle.
-
-=item * It returns array reference in format [ ['class1', score1], ['class2', score2], ...] sorted
-according to score descendently, so the most probable class is the first.
-
-=back
-
-=cut
 
 sub identify_handle
 {
-    my ($self, $fh, $verbose) = @_;
+    my ($self, $fh) = @_;
     my %actRes = ();
 
     # parameter check
@@ -310,23 +184,15 @@ sub identify_handle
 
     # normalize results
     my @res = ();
-    if ( $sum > 0 ) {
-        for my $l (@allLanguages) {
-            my $score = 0;
-            if ( defined($actRes{$l}) ) {
-                $score = $actRes{$l};
-            }
-            my @pair = ($l, $score / $sum);
-            push(@res, \@pair);
-        }
-    }
 
-#    print STDERR "\nX\n" . $res[0] . "\nX\n";
-#    print STDERR "\nX\n\t" . $res[0]->[0] . "\nX\n";
-#    print STDERR "\nX\n\t" . $res[0]->[1] . "\nX\n";
-#    print STDERR "\nY\n" . $res[1] . "\nY\n";
-#    print STDERR "\nY\n\t" . $res[1]->[0] . "\nY\n";
-#    print STDERR "\nY\n\t" . $res[1]->[1] . "\nY\n";
+    for my $l (@allLanguages) {
+        my $score = 0;
+        if ( defined($actRes{$l}) ) {
+            $score = $actRes{$l} / $sum;
+        }
+        my @pair = ($l, $score);
+        push(@res, \@pair);
+    }
 
     # sort according to score
     my @sortedRes = sort { $b->[1] <=> $a->[1] } @res;
@@ -414,6 +280,132 @@ sub _unload_model
     return;
 }
 
+
+1;
+
+__END__
+=pod
+
+=head1 SYNOPSIS
+
+This modul identify languages with moduls provided by the user. If you want to use pretrained models use L<Lingua::YALI::LanguageIdentifier|Lingua::YALI::LanguageIdentifier>.
+
+Models trained on texts from specific domain outperforms the general ones.
+
+    use Lingua::YALI::Builder;
+    use Lingua::YALI::Identifier;
+
+    # create models
+    my $builder_a = Lingua::YALI::Builder->new(ngrams=>[2]);
+    $builder_a->train_string("aaaaa aaaa aaa aaa aaa aaaaa aa");
+    $builder_a->store("model_a.2_all.gz", 2);
+
+    my $builder_b = Lingua::YALI::Builder->new(ngrams=>[2]);
+    $builder_b->train_string("bbbbbb bbbb bbbb bbb bbbb bbbb bbb");
+    $builder_b->store("model_b.2_all.gz", 2);
+
+    # create identifier and load models
+    my $identifier = Lingua::YALI::Identifier->new();
+    $identifier->add_class("a", "model_a.2_all.gz");
+    $identifier->add_class("b", "model_b.2_all.gz");
+
+    # identify strings
+    my $result1 = $identifier->identify_string("aaaaaaaaaaaaaaaaaaa");
+    print $result1->[0]->[0] . "\t" . $result1->[0]->[1];
+    # prints out a 1
+
+    my $result2 = $identifier->identify_string("bbbbbbbbbbbbbbbbbbb");
+    print $result2->[0]->[0] . "\t" . $result2->[0]->[1];
+    # prints out b 1
+
+More examples is presented in L<Lingua::YALI::Examples|Lingua::YALI::Examples>.
+
+=head1 METHODS
+
+=head2 BUILD
+
+Initializes internal variables.
+
+    # create identifier
+    my $identifier = Lingua::YALI::Identifier->new();
+
+=head2 add_class
+
+    $added = $identifier->add_class($class, $model)
+
+Adds model stored in file C<$model> with class C<$class> and
+returns whether it was added or not.
+
+    print $identifier->add_class("a", "model.a1.gz") . "\n";
+    # prints out 1
+    print $identifier->add_class("a", "model.a2.gz") . "\n";
+    # prints out 0 - class a was already added
+
+=head2 remove_class
+
+     my $removed = $identifier->remove_class($class);
+
+Removes model for class C<$class>.
+
+    $identifier->add_class("a", "model.a1.gz");
+    print $identifier->remove_class("a") . "\n";
+    # prints out 1
+    print $identifier->remove_class("a") . "\n";
+    # prints out 0 - class a was already removed
+
+=head2 get_classes
+
+    my \@classes = $identifier->get_classes();
+
+Returns all registered classes.
+
+=head2 identify_file
+
+    my $result = $identifier->identify_file($file)
+
+Identifies class for file C<$file>.
+
+=over
+
+=item * It returns undef if C<$file> is undef.
+
+=item * It croaks if the file C<$file> does not exist or is not readable.
+
+=item * Otherwise look for more details at method L</identify_handle>.
+
+=back
+
+=head2 identify_string
+
+    my $result = $identifier->identify_string($string)
+
+Identifies class for string C<$string>.
+
+=over
+
+=item * It returns undef if C<$string> is undef.
+
+=item * Otherwise look for more details at method L</identify_handle>.
+
+=back
+
+=head2 identify_handle
+
+    my $result = $identifier->identify_handle($fh)
+
+Identifies class for file handle C<$fh> and returns:
+
+=over
+
+=item * It returns undef if C<$fh> is undef.
+
+=item * It croaks if the C<$fh> is not file handle.
+
+=item * It returns array reference in format [ ['class1', score1], ['class2', score2], ...] sorted
+according to score descendently, so the most probable class is the first.
+
+=back
+
 =head1 SEE ALSO
 
 =over
@@ -428,6 +420,17 @@ sub _unload_model
 
 =back
 
+=head1 AUTHOR
+
+Martin Majlis <martin@majlis.cz>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2012 by Martin Majlis.
+
+This is free software, licensed under:
+
+  The (three-clause) BSD License
+
 =cut
 
-1;

@@ -227,8 +227,6 @@ sub train_handle
         croak("Expected file handler but " . (ref $fh) . " was used.");
     }
 
-    my %actRes = ();
-
 #    my $padding = $self->{_padding};
     my @ngrams = @{$self->ngrams};
     my $padding = "";
@@ -330,8 +328,8 @@ sub store
 
     # store n-grams
     my $i = 0;
-    for my $k (sort { 
-                        $self->{_dict}->{$ngram}{$b} <=> $self->{_dict}->{$ngram}{$a} 
+    for my $k (sort {
+                        $self->{_dict}->{$ngram}{$b} <=> $self->{_dict}->{$ngram}{$a}
                         ||
                         $a cmp $b
                     } keys %{$self->{_dict}->{$ngram}}) {

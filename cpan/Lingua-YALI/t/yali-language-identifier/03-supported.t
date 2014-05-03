@@ -42,7 +42,7 @@ stdout_is_eq($cmd_full . " | " . $cmd_wc, "122", "there is 122 supported languag
 stderr_is_eq($cmd_full. " | " . $cmd_wc, "", $cmd_full. " | " . $cmd_wc);
 exit_is_num($cmd_full. " | " . $cmd_wc, 0);
 
-# 
+#
 #stdout_is_eq($cmd_full. " | wc -l | sed -r 's/\\s+//g'", "122\n", "s");
 #stdout_is_eq($cmd_full. " | wc -l | sed -r 's/ //g'", "122\n", " ");
 

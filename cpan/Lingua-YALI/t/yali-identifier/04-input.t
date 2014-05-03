@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Time::HiRes;
 use Test::Command;
 use File::Basename;
@@ -39,7 +39,9 @@ exit_is_num($cmd_full, 0);
 stdout_is_eq($cmd_full, "a\n", "-i is ommited");
 stderr_is_eq($cmd_full, $stderr, $cmd_full);
 
-
 stdout_is_eq($cmd_base . " --input=$input_file " . $cmd_suffix, "a\n", "--input=file");
 stdout_is_eq("cat $input_file | " . $cmd_base . " --input=- " . $cmd_suffix, "a\n", "--input=-");
 stdout_is_eq("cat $input_file | " . $cmd_base . " " . $cmd_suffix, "a\n", "--input is ommited");
+
+$cmd_full = "echo 'cccc' | " . $cmd_base . " --format tabbed --input=- " . $cmd_suffix;
+stdout_is_eq($cmd_full, "0\t0\n", $cmd_full);
