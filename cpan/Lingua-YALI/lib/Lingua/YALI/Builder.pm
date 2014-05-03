@@ -330,7 +330,11 @@ sub store
 
     # store n-grams
     my $i = 0;
-    for my $k (sort { $self->{_dict}->{$ngram}{$b} <=> $self->{_dict}->{$ngram}{$a} } keys %{$self->{_dict}->{$ngram}}) {
+    for my $k (sort { 
+                        $self->{_dict}->{$ngram}{$b} <=> $self->{_dict}->{$ngram}{$a} 
+                        ||
+                        $a cmp $b
+                    } keys %{$self->{_dict}->{$ngram}}) {
         print $fhModel "$k\t$self->{_dict}->{$ngram}{$k}\n";
         if ( ++$i > $count ) {
             last;
