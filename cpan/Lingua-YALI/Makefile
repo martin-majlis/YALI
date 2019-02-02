@@ -39,6 +39,9 @@ release: build
 	rm -v doc_*; \
 	dzil release;
 
+development-requirements:
+	cpanm Dist::Zilla Test::Harness Test::Pod::Coverage Test::Command
+	dzil authordeps --missing | cpanm
 	
 # cd ~/work/devel/YALI/tests/model.limited-1600
 # for f in *.4.txt.gz; do echo $f; lang=`echo $f | cut -f1 -d.`; out=~/work/devel/YALI/cpan/Lingua-YALI/lib/auto/Lingua/YALI/$lang.yali; rm $out.*; echo 4 > $out; total=`cat $lang.txt.4.total`; echo -e "___total___\t$total" >> $out; zcat $f >> $out; gzip $out; done
