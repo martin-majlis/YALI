@@ -17,6 +17,6 @@ install:
 before_script:
   - coverage-setup
 script:
-  - prove -l $(test-dirs)
+  - cd cpan/Lingua-YALI; prove -lrs t
 after_success:
   - coverage-report
