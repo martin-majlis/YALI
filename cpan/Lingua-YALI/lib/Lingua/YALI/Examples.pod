@@ -36,10 +36,9 @@ So we start with downloading 20 articles for Czech, English, and French.
 
 This section provides information how to use scripts L<yali-builder|Lingua::yali-builder>, L<yali-identifier|Lingua::yali-identifier>, and  L<yali-language-identifier|Lingua::yali-language-identifier>.
 
-=head2 Language Identification  with Pretrained Models
+=head2 Language Identification with Pretrained Models
 
-The script yali-language-identifier is distributed with pretrained 
-language models for L<122 languages|Lingua::YALI::LanguageIdentifier/LANGUAGES>.
+The script yali-language-identifier is distributed with pretrained language models for L<122 languages|Lingua::YALI::LanguageIdentifier/LANGUAGES>.
 
     # check out possible options
     yali-language-identifier --help
