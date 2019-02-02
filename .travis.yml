@@ -1,10 +1,18 @@
 language: perl
 perl:
 - "5.26"
-- "5.24"
-- "5.22"
-- "5.20"
+- "dev"
+env:
+- COVERAGE=1
+before_install:
+- eval $(curl https://travis-perl.github.io/init) --auto
 install:
 - cd cpan/Lingua-YALI; make development-requirements
+- cpan-install --coverage
+sudo: false
+before_script:
+- coverage-setup
 script:
 - cd cpan/Lingua-YALI; make test-full
+after_success:
+- coverage-report
